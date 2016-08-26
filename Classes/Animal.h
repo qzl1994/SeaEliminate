@@ -6,8 +6,6 @@
 class Animal : public cocos2d::Sprite
 {
 public:
-	static Animal* createByType();
-
 
 };
 

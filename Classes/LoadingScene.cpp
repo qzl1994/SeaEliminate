@@ -1,4 +1,7 @@
 #include "LoadingScene.h"
+#include "SimpleAudioEngine.h"
+
+using namespace CocosDenshion;
 
 USING_NS_CC;
 
@@ -23,51 +26,55 @@ bool LoadingLayer::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto label = Label::createWithSystemFont("Loading...", "Arial", 36);
+	auto label = Label::createWithSystemFont("Loading...", "Arial", 48);
 	label->setPosition(visibleSize.width / 2, visibleSize.height / 2);
 	addChild(label);
 
 	// 初始化加载纹理数
 	m_texture_num = 0;
+	int *ptexture_num = &m_texture_num;
 
-	// 加载纹理图片
-	Director::getInstance()->getTextureCache()->addImageAsync("sea_sheet.png",
-		CC_CALLBACK_1(LoadingLayer::loadingTextureCallback, this));
+	//加载完毕回调
+	auto addTextureCallback = [ptexture_num](Texture2D* texture)
+	{
+		(*ptexture_num)++;
+	};
 
-	// 异步预加载背景图片
-	TextureCache::getInstance()->addImage("background.png");
-	TextureCache::getInstance()->addImage("board.png");
+	// 异步预加载纹理图片
+	TextureCache::getInstance()->addImageAsync("texture/background.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/grid.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/animal1.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/animal2.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/animal3.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/animal4.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/animal5.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/animal6.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/animal7.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/animal8.png", addTextureCallback);
 
+	// 开启加载进度检测
+	this->schedule(schedule_selector(LoadingLayer::onTextureLoading));
+
+	// 预加载音效
+	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("BGM.mp3");
     
     return true;
 }
 
-// 加载纹理图片对应帧缓存
-void LoadingLayer::loadingTextureCallback(Texture2D* texture)
-{
-	switch (m_texture_num++)
-	{
-	case 0:
-		SpriteFrameCache::getInstance()->addSpriteFramesWithFile("sea_sheet.plist", texture);
-
-		this->schedule(schedule_selector(LoadingLayer::onTextureLoading), 1, 1, 3);
-
-		break;
-	default:
-		break;
-	}
-}
 
 void LoadingLayer::onTextureLoading(float dt)
 {
-	auto scene = GameLayer::createScene();
+	// 一旦图片加载完毕，那么进入游戏场景
+	if (m_texture_num == 10)
+	{
+		this->unschedule(schedule_selector(LoadingLayer::onTextureLoading));
 
-	Director::getInstance()->replaceScene(scene);
-}
+		auto call = CallFunc::create([](){
+			auto scene = GameLayer::createScene();
+			Director::getInstance()->replaceScene(TransitionFade::create(0.5, scene));
+		});
 
-void LoadingLayer::onExit()
-{
-	Layer::onExit();
-
-	this->unschedule(schedule_selector(LoadingLayer::onTextureLoading));
+		// 等待一会儿，进入
+		this->runAction(Sequence::create(DelayTime::create(0.51), call, nullptr));
+	}
 }

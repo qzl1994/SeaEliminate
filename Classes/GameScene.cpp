@@ -1,6 +1,9 @@
 #include "GameScene.h"
+#include "SimpleAudioEngine.h"
+
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 Scene* GameLayer::createScene()
 {
@@ -23,11 +26,18 @@ bool GameLayer::init()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 
 	// ¼ÓÔØ±³¾°Í¼
-	auto bg = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("background.png"));
+	auto bg = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/background.png"));
 	bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(bg);
 
 
 
 	return true;
+}
+
+void GameLayer::onEnterTransitionDidFinish()
+{
+	Layer::onEnterTransitionDidFinish();
+
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("BGM.mp3", true);
 }

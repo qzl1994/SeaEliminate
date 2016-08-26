@@ -10,6 +10,8 @@ public:
 
 	virtual bool init();
 
+	virtual void onEnterTransitionDidFinish();
+
 	CREATE_FUNC(GameLayer);
 
 };
