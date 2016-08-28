@@ -2,6 +2,7 @@
 #define __LOADING_SCENE_H__
 
 #include "cocos2d.h"
+#include "SimpleAudioEngine.h"
 
 #include "GameScene.h"
 

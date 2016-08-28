@@ -4,13 +4,11 @@
 #include "cocos2d.h"
 #include "Animal.h"
 
+#include "SystemHeader.h"
+
 #include <vector>
 
 using namespace std;
-
-
-#define GRID_WIDTH 60 // 一个格子像素为60
-
 
 class AnimalGrid : public cocos2d::Node
 {
@@ -23,6 +21,7 @@ private:
 
 
 	Animal* createAnimal(int x, int y); // 根据坐标创建一个动物
+	bool isAnimalLegal(Animal* animal, int x, int y); // 判断创建的动物是否三消
 
 public:
 	static AnimalGrid* create(int row, int col);

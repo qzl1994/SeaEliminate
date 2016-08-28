@@ -1,9 +1,7 @@
 #include "LoadingScene.h"
-#include "SimpleAudioEngine.h"
-
-using namespace CocosDenshion;
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 Scene* LoadingLayer::createScene()
 {
@@ -60,7 +58,6 @@ bool LoadingLayer::init()
     
     return true;
 }
-
 
 void LoadingLayer::onTextureLoading(float dt)
 {

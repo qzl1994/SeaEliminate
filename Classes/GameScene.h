@@ -2,10 +2,10 @@
 #define __GAME_SCENE_H__
 
 #include "cocos2d.h"
+#include "SimpleAudioEngine.h"
 #include "AnimalGrid.h"
 
-#define ROW 8
-#define COL 8
+#include "SystemHeader.h"
 
 class GameLayer : public cocos2d::Layer
 {
@@ -17,7 +17,6 @@ public:
 	virtual void onEnterTransitionDidFinish();
 
 	CREATE_FUNC(GameLayer);
-
 
 private:
 

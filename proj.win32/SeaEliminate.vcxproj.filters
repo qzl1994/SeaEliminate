@@ -50,6 +50,9 @@
     <ClInclude Include="..\Classes\AnimalGrid.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\SystemHeader.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

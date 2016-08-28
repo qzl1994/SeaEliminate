@@ -1,5 +1,4 @@
 #include "GameScene.h"
-#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 using namespace CocosDenshion;
@@ -29,7 +28,7 @@ bool GameLayer::init()
 	bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(bg, 0);
 
-	//初始化网格数据，网格的原点在左下角
+	// 初始化网格数据，网格的原点在左下角
 	m_AnimalGrid = AnimalGrid::create(ROW, COL);
 	m_AnimalGrid->setAnchorPoint(Vec2(0, 0));
 	m_AnimalGrid->setPosition((visibleSize.width - ROW*GRID_WIDTH) / 2, GRID_WIDTH);

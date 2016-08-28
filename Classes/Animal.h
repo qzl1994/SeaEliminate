@@ -18,6 +18,10 @@ public:
 
 	bool init(int type, int x, int y);
 
+	int getType() { return m_type; }
+	int getX() { return m_x; }
+	int getY() { return m_y; }
+
 };
 
 #endif
