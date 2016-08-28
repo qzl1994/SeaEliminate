@@ -1,7 +1,6 @@
 #include "GameScene.h"
 #include "SimpleAudioEngine.h"
 
-
 USING_NS_CC;
 using namespace CocosDenshion;
 
@@ -28,7 +27,14 @@ bool GameLayer::init()
 	// 加载背景图
 	auto bg = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/background.png"));
 	bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-	this->addChild(bg);
+	this->addChild(bg, 0);
+
+	//初始化网格数据，网格的原点在左下角
+	m_AnimalGrid = AnimalGrid::create(ROW, COL);
+	m_AnimalGrid->setAnchorPoint(Vec2(0, 0));
+	m_AnimalGrid->setPosition((visibleSize.width - ROW*GRID_WIDTH) / 2, GRID_WIDTH);
+	this->addChild(m_AnimalGrid, 1);
+
 
 
 

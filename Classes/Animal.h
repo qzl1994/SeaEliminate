@@ -5,7 +5,18 @@
 
 class Animal : public cocos2d::Sprite
 {
+private:
+	// 类型
+	int m_type;
+	// 坐标
+	int m_x;
+	int m_y;
+
 public:
+	// 根据动物类型以及坐标创建动物
+	static Animal* createByType(int type, int x, int y);
+
+	bool init(int type, int x, int y);
 
 };
 

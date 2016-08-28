@@ -1,0 +1,38 @@
+#ifndef __ANIMAL_GRID_H__
+#define __ANIMAL_GRID_H__
+
+#include "cocos2d.h"
+#include "Animal.h"
+
+#include <vector>
+
+using namespace std;
+
+
+#define GRID_WIDTH 60 // 一个格子像素为60
+
+
+class AnimalGrid : public cocos2d::Node
+{
+private:
+	int m_row;	// 行数
+	int m_col;	// 列数
+
+	vector<vector<Animal*>> m_AnimalGrid; //存放宝石对象的容器
+
+
+
+	Animal* createAnimal(int x, int y); // 根据坐标创建一个动物
+
+public:
+	static AnimalGrid* create(int row, int col);
+
+	bool init(int row, int col);
+
+
+	int getRow() { return m_row; }
+	int getCol() { return m_col; }
+
+};
+
+#endif
