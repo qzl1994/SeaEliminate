@@ -51,9 +51,19 @@ bool AnimalGrid::init(int row, int col)
 		}
 	}
 
+	// 加入触摸监听
+	auto listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+	listener->onTouchBegan = CC_CALLBACK_2(AnimalGrid::onTouchBegan, this);
+
+	// 添加触摸事件监听器
+	EventDispatcher * eventDispatcher = Director::getInstance()->getEventDispatcher();
+	eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
 	return true;
 }
 
+// 随机创建一个动物
 Animal* AnimalGrid::createAnimal(int x, int y)
 {
 	Animal* animal = nullptr;
@@ -75,6 +85,7 @@ Animal* AnimalGrid::createAnimal(int x, int y)
 	return animal;
 }
 
+// 判断布局合法
 bool AnimalGrid::isAnimalLegal(Animal* animal, int x, int y)
 {
 	bool isXLegal = true;
@@ -105,4 +116,29 @@ bool AnimalGrid::isAnimalLegal(Animal* animal, int x, int y)
 	}
 
 	return isXLegal && isYLegal;
+}
+
+bool AnimalGrid::onTouchBegan(Touch* touch, Event* event)
+{
+	// 将触摸点坐标转化为模型坐标
+	auto pos = this->convertToNodeSpace(touch->getLocation());
+
+	// 是否按在布局上
+	if (Rect(0, 0, m_col*GRID_WIDTH, m_row*GRID_WIDTH).containsPoint(pos))
+	{
+		// 得到布局坐标
+		int x = pos.x / GRID_WIDTH;
+		int y = pos.y / GRID_WIDTH;
+
+		// 得到当前选中的动物
+		m_animalSelected = m_AnimalGrid[x][y];
+
+		log("touch coordinate: x=%d,y=%d animal's type:%d", x+1, y+1, m_animalSelected->getType());
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
