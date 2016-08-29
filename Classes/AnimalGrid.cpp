@@ -27,6 +27,9 @@ bool AnimalGrid::init(int row, int col)
 	m_row = row;
 	m_col = col;
 
+	m_animalSelected = nullptr;
+	m_animalSwapped = nullptr;
+
 	// 根据行列初始化一个空的宝石容器大小
 	m_AnimalGrid.resize(m_row);
 	for (auto &vec : m_AnimalGrid)
@@ -44,7 +47,7 @@ bool AnimalGrid::init(int row, int col)
 			node->setAnchorPoint(Vec2(0, 0));
 			node->setPosition(x*GRID_WIDTH, y*GRID_WIDTH);
 			node->setOpacity(100);
-			this->addChild(node, 0);
+			this->addChild(node, NODE_ZORDER);
 
 			// 为动物容器填充动物对象
 			m_AnimalGrid[x][y] = createAnimal(x, y);
@@ -55,10 +58,10 @@ bool AnimalGrid::init(int row, int col)
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 	listener->onTouchBegan = CC_CALLBACK_2(AnimalGrid::onTouchBegan, this);
+	listener->onTouchMoved = CC_CALLBACK_2(AnimalGrid::onTouchMoved, this);
 
 	// 添加触摸事件监听器
-	EventDispatcher * eventDispatcher = Director::getInstance()->getEventDispatcher();
-	eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
 	return true;
 }
@@ -80,7 +83,7 @@ Animal* AnimalGrid::createAnimal(int x, int y)
 
 	animal->setPosition(x*GRID_WIDTH, y*GRID_WIDTH);
 
-	this->addChild(animal, 1);
+	this->addChild(animal, ANIMAL_ZORDER);
 
 	return animal;
 }
@@ -132,8 +135,7 @@ bool AnimalGrid::onTouchBegan(Touch* touch, Event* event)
 
 		// 得到当前选中的动物
 		m_animalSelected = m_AnimalGrid[x][y];
-
-		log("touch coordinate: x=%d,y=%d animal's type:%d", x+1, y+1, m_animalSelected->getType());
+		m_animalSelected->setLocalZOrder(ANIMAL_ZORDER + 1);
 
 		return true;
 	}
@@ -141,4 +143,75 @@ bool AnimalGrid::onTouchBegan(Touch* touch, Event* event)
 	{
 		return false;
 	}
+}
+
+void AnimalGrid::onTouchMoved(Touch* touch, Event* event)
+{
+	if (!m_animalSelected)
+	{
+		return;
+	}
+
+	// 已选择动物的坐标
+	int startX = m_animalSelected->getX();
+	int startY = m_animalSelected->getY();
+
+	// 触摸点的布局坐标
+	auto pos = this->convertToNodeSpace(touch->getLocation());
+	int touchX = pos.x / GRID_WIDTH;
+	int touchY = pos.y / GRID_WIDTH;
+
+	// 如果触摸点不在布局内，或者触摸点布局坐标和已选动物布局坐标一样，那么返回
+	if (!Rect(0, 0, m_col*GRID_WIDTH, m_row*GRID_WIDTH).containsPoint(pos) || 
+		Vec2(touchX, touchY) == Vec2(startX, startY))
+	{
+		return;
+	}
+
+	// 判断已选动物的布局坐标与触摸点的布局坐标是否直角相隔一个单位
+	if (abs(startX - touchX) + abs(startY - touchY) != 1)
+	{
+		return;
+	}
+
+	// 余下的情况，触摸点上面的动物就是欲进行交换的动物
+	// 获取欲交换的动物
+	m_animalSwapped = m_AnimalGrid[touchX][touchY];
+
+	// 交换动物
+	swapAnimals(m_animalSelected, m_animalSwapped);
+
+}
+
+// 交换动物
+void AnimalGrid::swapAnimals(Animal *animalA, Animal *animalB)
+{
+	_eventDispatcher->pauseEventListenersForTarget(this); // 交换开始，关闭触摸监听
+
+	auto temp = m_AnimalGrid[animalA->getX()][animalA->getY()];
+	m_AnimalGrid[animalA->getX()][animalA->getY()] = m_AnimalGrid[animalB->getX()][animalB->getY()];
+	m_AnimalGrid[animalB->getX()][animalB->getY()] = temp;
+
+	auto tempX = animalA->getX();
+	animalA->setX(animalB->getX());
+	animalB->setX(tempX);
+
+	auto tempY = animalA->getY();
+	animalA->setY(animalB->getY());
+	animalB->setY(tempY);
+
+	swapAnimalToNewPos(animalA);
+	swapAnimalToNewPos(animalB);
+}
+
+// 动物移动位置
+void AnimalGrid::swapAnimalToNewPos(Animal* animal)
+{
+	// 设置动物交换状态为真，移动结束再设置为假
+	animal->setSwapingState(true);
+	auto move = MoveTo::create(MOVE_SPEED, Vec2(animal->getX() * GRID_WIDTH, animal->getY() * GRID_WIDTH));
+	auto call = CallFunc::create([animal](){
+		animal->setSwapingState(false);
+	});
+	animal->runAction(Sequence::create(move, call, nullptr));
 }

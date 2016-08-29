@@ -27,13 +27,16 @@ bool Animal::init(int type, int x, int y)
 	m_type = type;
 	m_x = x;
 	m_y = y;
+	m_isSwaping = false;
+	m_isCrushing = false;
 
-	//根据资源名初始化纹理
+	// 根据资源名初始化纹理
 	char name[100] = { 0 };
 	sprintf(name, "texture/animal%d.png", m_type);
 	this->initWithTexture(TextureCache::getInstance()->getTextureForKey(name));
 
-	this->setAnchorPoint(Vec2(0, 0)); //左下角为锚点
+	// 左下角为锚点
+	this->setAnchorPoint(Vec2(0, 0)); 
 
 	return true;
 }
