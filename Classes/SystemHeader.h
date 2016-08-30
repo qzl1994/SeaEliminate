@@ -6,4 +6,4 @@
 #define NODE_ZORDER 0				// 格子渲染顺序
 #define ANIMAL_ZORDER 1				// 动物渲染顺序
 
-#define MOVE_SPEED 0.2
+#define MOVE_SPEED 0.2				// 交换速度

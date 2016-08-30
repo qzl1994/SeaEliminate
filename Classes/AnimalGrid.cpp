@@ -1,6 +1,7 @@
 #include "AnimalGrid.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 AnimalGrid* AnimalGrid::create(int row, int col)
 {
@@ -121,6 +122,7 @@ bool AnimalGrid::isAnimalLegal(Animal* animal, int x, int y)
 	return isXLegal && isYLegal;
 }
 
+// 触摸事件
 bool AnimalGrid::onTouchBegan(Touch* touch, Event* event)
 {
 	// 将触摸点坐标转化为模型坐标
@@ -181,6 +183,9 @@ void AnimalGrid::onTouchMoved(Touch* touch, Event* event)
 	// 交换动物
 	swapAnimals(m_animalSelected, m_animalSwapped);
 
+	// 开启交换状态捕捉函数
+	this->schedule(schedule_selector(AnimalGrid::onAnimalsSwaping));
+
 }
 
 // 交换动物
@@ -209,9 +214,72 @@ void AnimalGrid::swapAnimalToNewPos(Animal* animal)
 {
 	// 设置动物交换状态为真，移动结束再设置为假
 	animal->setSwapingState(true);
+
 	auto move = MoveTo::create(MOVE_SPEED, Vec2(animal->getX() * GRID_WIDTH, animal->getY() * GRID_WIDTH));
 	auto call = CallFunc::create([animal](){
 		animal->setSwapingState(false);
 	});
+
 	animal->runAction(Sequence::create(move, call, nullptr));
+}
+
+// 判断消除
+bool AnimalGrid::canCrush()
+{
+
+	return false;
+}
+
+//	开始消除
+void AnimalGrid::goCrush()
+{
+
+}
+
+// 捕捉交换状态
+void AnimalGrid::onAnimalsSwaping(float dt)
+{
+	// 捕捉两个正在交换的动物的交换动作是否已经停止，如果没停止，返回继续捕捉
+	if (m_animalSelected->isSwaping() || m_animalSwapped->isSwaping())
+	{
+		return;
+	}
+	else
+	{
+		// 停止捕捉
+		this->unschedule(schedule_selector(AnimalGrid::onAnimalsSwaping));
+
+		// 判断当前状态是否可以消除
+		if (canCrush())
+		{
+			m_animalSelected = nullptr;
+
+			goCrush();
+			//this->schedule(schedule_selector(JewelsGrid::onJewelsCrushing));
+		}
+		else
+		{
+			// 不能消除，交换回去，开启交换返回时的捕捉函数
+			swapAnimals(m_animalSelected, m_animalSwapped);
+			this->schedule(schedule_selector(AnimalGrid::onAnimalsSwapingBack));
+		}
+	}
+}
+
+// 复位
+void AnimalGrid::onAnimalsSwapingBack(float dt)
+{
+	// 捕捉两个正在交换的动物的交换动作是否已经停止，如果没停止，返回继续捕捉
+	if (m_animalSelected->isSwaping() || m_animalSwapped->isSwaping())
+	{
+		return;
+	}
+	else
+	{
+		this->unschedule(schedule_selector(AnimalGrid::onAnimalsSwapingBack)); // 停止捕捉
+
+		m_animalSelected = nullptr;
+
+		_eventDispatcher->resumeEventListenersForTarget(this); // 重新开始触摸接听
+	}
 }
