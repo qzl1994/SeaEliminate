@@ -12,6 +12,10 @@ private:
 	int m_x;
 	int m_y;
 
+	int m_special;	// 特殊消标记
+
+	bool m_isNeedClean; // 消除标记
+
 	bool m_isSwaping; // 是否正在交换
 	bool m_isCrushing; // 是否正在消除
 
@@ -27,10 +31,20 @@ public:
 	void setX(int x) { m_x = x; }
 	void setY(int y) { m_y = y; }
 
+
+	int getSpecial(){ return m_special; }
+	bool isNeedClean() { return m_isNeedClean; }
+
+	void setClean(bool state) { m_isNeedClean = state; }
+	void setSpeicial(int special){ m_special = special; }
+
+
 	bool isSwaping() { return m_isSwaping; }
 	bool isCrushing() { return m_isCrushing; }
 
 	void setSwapingState(bool state) { m_isSwaping = state; }
+
+	void crush(); //消除
 
 };
 

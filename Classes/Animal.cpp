@@ -27,8 +27,13 @@ bool Animal::init(int type, int x, int y)
 	m_type = type;
 	m_x = x;
 	m_y = y;
+
+	m_special = 0;
+
 	m_isSwaping = false;
 	m_isCrushing = false;
+
+	m_isNeedClean = false;
 
 	// 根据资源名初始化纹理
 	char name[100] = { 0 };
@@ -39,4 +44,18 @@ bool Animal::init(int type, int x, int y)
 	this->setAnchorPoint(Vec2(0, 0)); 
 
 	return true;
+}
+
+void Animal::crush()
+{
+
+
+	// 开始消除，消除状态为真，直到消除动作结束，将宝石移除渲染节点，并置消除状态为假
+	m_isCrushing = true;
+	auto action = FadeOut::create(0.2);
+	auto call = CallFunc::create([this](){
+		this->removeFromParent();
+		m_isCrushing = false;
+	});
+	this->runAction(Sequence::create(action, call, nullptr));
 }

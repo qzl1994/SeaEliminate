@@ -137,8 +137,7 @@ bool AnimalGrid::onTouchBegan(Touch* touch, Event* event)
 
 		// 得到当前选中的动物
 		m_animalSelected = m_AnimalGrid[x][y];
-		m_animalSelected->setLocalZOrder(ANIMAL_ZORDER + 1);
-
+		
 		return true;
 	}
 	else
@@ -226,6 +225,360 @@ void AnimalGrid::swapAnimalToNewPos(Animal* animal)
 // 判断消除
 bool AnimalGrid::canCrush()
 {
+	int count = 0; // 连续数
+	Animal *AnimalBegin = nullptr; // 起始遍历的动物
+	Animal *AnimalNext = nullptr; // 从起始动物开始往前遍历的动物
+
+	// 遍历每一列
+	for (int x = 0; x < m_col; x++)
+	{
+		for (int y = 0; y < m_row - 1;)
+		{
+			count = 1;
+			AnimalBegin = m_AnimalGrid[x][y];
+			AnimalNext = m_AnimalGrid[x][y + 1];
+
+			// 如果连续出现同类型
+			while (AnimalBegin->getType() == AnimalNext->getType())
+			{
+				count++;
+				int nextIndex = y + count;
+				if (nextIndex > m_row - 1)
+				{
+					break;
+				}
+				AnimalNext = m_AnimalGrid[x][nextIndex];
+			}
+			// 如果连续数大于等于3，那么遍历的这些动物应当消除，把它们存入消除动物盒子
+			if (count >= 3)
+			{
+				if (count == 4)
+				{
+					log("---type:%d---x:%d---y:%d", m_animalSelected->getType(), m_animalSelected->getX(), m_animalSelected->getY());
+				}
+
+
+				for (int n = 0; n < count; n++)
+				{
+					auto jewel = m_AnimalGrid[x][y + n];
+					m_crushAnimalGrid.pushBack(jewel);
+				}
+			}
+			y += count;
+		}
+	}
+
+	// 如果消除动物盒子不为空，那么说明该阵列可消除，返回真
+	if (!m_crushAnimalGrid.empty())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+// 标记传入的动物消除状态
+void AnimalGrid::singeAnimal(Animal* animal)
+{
+	int row = animal->getX();
+	int col = animal->getY();
+
+	m_crushAnimalH.pushBack(animal);
+	m_crushAnimalV.pushBack(animal);
+
+	// 判断动物左边是否相同
+	while (col>1)
+	{
+		col = col - 1;
+
+		auto animal_left = m_AnimalGrid[animal->getX()][col];
+
+		if (animal_left && animal_left->getType() == animal->getType())
+		{
+			m_crushAnimalH.pushBack(animal_left);
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	// 判断动物右边
+	if (animal->getY() != m_col)
+	{
+		for (int i = animal->getY() + 1; i < m_col; i++)
+		{
+			auto animal_right = m_AnimalGrid[animal->getX()][i];
+
+			if (animal_right && animal_right->getType() == animal->getType())
+			{
+				m_crushAnimalH.pushBack(animal_right);
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+
+	// 判断动物上面
+	if (animal->getX() != m_row)
+	{
+		for (int i = animal->getX() + 1; i < m_row; i++)
+		{
+			auto animal_up = m_AnimalGrid[i][animal->getY()];
+
+			if (animal_up && animal_up->getType() == animal->getType())
+			{
+				m_crushAnimalV.pushBack(animal_up);
+			}
+			else
+			{
+				break;
+			}
+		}
+
+	}
+
+	// 判断动物下面
+	while (row > 1)
+	{
+		row = row - 1;
+
+		auto animal_down = m_AnimalGrid[row][animal->getY()];
+
+		if (animal_down && animal_down->getType() == animal->getType())
+		{
+			m_crushAnimalV.pushBack(animal_down);
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	// 判断横向容器，标记待消除动物
+	if (m_crushAnimalH.size() < 3)
+	{
+		m_crushAnimalH.clear();
+	}
+	else
+	{
+
+		for (auto animalH : m_crushAnimalH)
+		{
+			animalH->setClean(true);
+		}
+	}
+	// 判断纵向容器，标记待消除动物
+	if (m_crushAnimalV.size() < 3)
+	{
+		m_crushAnimalV.clear();
+	}
+	else
+	{
+
+		for (auto animalV : m_crushAnimalV)
+		{
+			animalV->setClean(true);
+		}
+	}
+
+	// 判断4消
+	if (m_crushAnimalH.size() == 4 || m_crushAnimalV.size() == 4)
+	{
+		log("4xiao");
+		bool crush = true;
+
+		for (auto animalH : m_crushAnimalH)
+		{
+			if (animalH->getSpecial() > 0)
+			{
+				crush = false;
+			}
+		}
+
+		for (auto animalV : m_crushAnimalV)
+		{
+			if (animalV->getSpecial() > 0)
+			{
+				crush = false;
+			}
+		}
+
+		if (crush)
+		{
+			if (m_crushAnimalH.size() == 4 && m_crushAnimalV.size() < 4)
+			{
+				animal->setSpeicial(1);
+			}
+			else if (m_crushAnimalV.size() == 4 && m_crushAnimalH.size() < 4)
+			{
+				animal->setSpeicial(2);
+			}
+		}
+
+	}
+
+	// 判断T,L型消
+	if (m_crushAnimalH.size() + m_crushAnimalV.size() >= 6)
+	{
+		log("Txiao");
+		for (auto animalH : m_crushAnimalH)
+		{
+			if (animalH->getSpecial() > 0)
+			{
+				animalH->setSpeicial(0);
+			}
+		}
+
+		for (auto animalV : m_crushAnimalV)
+		{
+			if (animalV->getSpecial() > 0)
+			{
+				animalV->setSpeicial(0);
+			}
+			
+		}
+
+		animal->setSpeicial(3);
+	}
+
+	// 判断5消
+	if (m_crushAnimalH.size() == 5 || m_crushAnimalV.size() == 5)
+	{
+		log("5xiao");
+		for (auto animalH : m_crushAnimalH)
+		{
+			if (animalH->getSpecial() > 0)
+			{
+				animalH->setSpeicial(0);
+			}
+		}
+
+		for (auto animalV : m_crushAnimalV)
+		{
+			if (animalV->getSpecial() > 0)
+			{
+				animalV->setSpeicial(0);
+			}
+
+		}
+
+		animal->setSpeicial(4);
+	}
+
+	// 遍历横向容器，为有特殊消标记的动物做处理
+	for (auto animalH : m_crushAnimalH)
+	{
+		if (animalH->isNeedClean() && (animalH->getSpecial() > 0))
+		{
+			this->specialSinged(animalH);
+		}
+	}
+	// 遍历纵向容器，为有特殊消标记的动物做处理
+	for (auto animalV : m_crushAnimalV)
+	{
+		if (animalV->isNeedClean() && (animalV->getSpecial() > 0))
+		{
+			this->specialSinged(animalV);
+		}
+	}
+
+	m_crushAnimalH.clear();
+	m_crushAnimalV.clear();
+
+}
+
+// 特殊消标记
+void AnimalGrid::specialSinged(Animal* animal)
+{
+	// 消除一整列
+	if (animal->getSpecial() == 1)
+	{
+		for (int i = 0; i < m_row; i++)
+		{
+			auto animal_V = m_AnimalGrid[i][animal->getY()];
+			animal_V->setClean(true);
+
+			if (animal_V->getSpecial()>0)
+			{
+				specialSinged(animal_V);
+			}
+		}
+	}
+
+	// 消除一整行
+	if (animal->getSpecial() == 2)
+	{
+		for (int i = 0; i < m_col; i++)
+		{
+			auto animal_H = m_AnimalGrid[animal->getX()][i];
+			animal_H->setClean(true);
+
+			if (animal_H->getSpecial() > 0)
+			{
+				specialSinged(animal_H);
+			}
+		}
+	}
+
+	// 菱形消除
+	if (animal->getSpecial() == 3)
+	{
+		for (int x = 0; x < m_row; x++)
+		{
+			for (int y = 0; y < m_col; y++)
+			{
+				auto animal_L = m_AnimalGrid[x][y];
+
+				if ((abs(animal_L->getX() - animal->getX()) + 
+					abs(animal_L->getY() - animal->getY())) < 3)
+				{
+					animal_L->setClean(true);
+
+					if (animal_L->getSpecial() > 0)
+					{
+						specialSinged(animal_L);
+					}
+				}
+			}
+		}
+	}
+
+	// 消除同一类型
+	if (animal->getSpecial() == 4)
+	{
+		for (int x = 0; x < m_row; x++)
+		{
+			for (int y = 0; y < m_col; y++)
+			{
+				auto animalF = m_AnimalGrid[x][y];
+
+				if (animalF && animalF->getType() == animal->getType())
+				{
+					animalF->setClean(true);
+				}
+			}
+		}
+	}
+}
+
+// 遍历全局，是否有消除标记的动物
+bool AnimalGrid::checkGridClean()
+{
+	for (int i = 0; i < m_row; i++)
+	{
+		for (int j = 0; j < m_col; j++)
+		{
+			if (m_AnimalGrid[i][j]->isNeedClean())
+			{
+				return true;
+			}
+		}
+	}
 
 	return false;
 }
@@ -233,7 +586,21 @@ bool AnimalGrid::canCrush()
 //	开始消除
 void AnimalGrid::goCrush()
 {
+	for (int x = 0; x < m_row; x++)
+	{
+		for (int y = 0; y < m_col; y++)
+		{
+			auto animal = m_AnimalGrid[x][y];
 
+			if (animal->isNeedClean())
+			{
+				auto newAnimal = Animal::createByType(random(1, ANIMAL_NUM), animal->getX(), m_row);
+				newAnimal->setPosition(newAnimal->getX() * GRID_WIDTH, m_row * GRID_WIDTH);
+				this->addChild(newAnimal);
+
+			}
+		}
+	}
 }
 
 // 捕捉交换状态
@@ -249,8 +616,11 @@ void AnimalGrid::onAnimalsSwaping(float dt)
 		// 停止捕捉
 		this->unschedule(schedule_selector(AnimalGrid::onAnimalsSwaping));
 
+		singeAnimal(m_animalSelected);
+		singeAnimal(m_animalSwapped);
+
 		// 判断当前状态是否可以消除
-		if (canCrush())
+		if (checkGridClean())
 		{
 			m_animalSelected = nullptr;
 
@@ -280,6 +650,6 @@ void AnimalGrid::onAnimalsSwapingBack(float dt)
 
 		m_animalSelected = nullptr;
 
-		_eventDispatcher->resumeEventListenersForTarget(this); // 重新开始触摸接听
+		_eventDispatcher->resumeEventListenersForTarget(this); // 重新开始触摸监听
 	}
 }

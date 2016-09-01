@@ -7,6 +7,7 @@
 #include "SystemHeader.h"
 #include <vector>
 
+USING_NS_CC;
 using namespace std;
 
 class AnimalGrid : public cocos2d::Node
@@ -19,6 +20,12 @@ private:
 	Animal* m_animalSwapped; // 欲交换的动物
 	
 	vector<vector<Animal*>> m_AnimalGrid; // 存放动物对象的容器
+
+	Vector<Animal*> m_crushAnimalGrid; // 准备消除的动物容器
+	Vector<Animal*> m_crushAnimalH;
+	Vector<Animal*> m_crushAnimalV;
+
+
 
 	// 关于创建动物的方法
 	Animal* createAnimal(int x, int y); // 根据坐标创建一个动物
@@ -35,6 +42,11 @@ private:
 	// 游戏逻辑部分
 	bool canCrush(); // 判断当前状态的动物阵列是否能消除
 	void goCrush(); // 开始消除
+
+	void singeAnimal(Animal* animal); // 判断单个动物
+	void specialSinged(Animal* animal);
+
+	bool checkGridClean();
 
 	// 捕捉函数，捕捉消除步骤是否完成
 	void onAnimalsSwaping(float dt);
