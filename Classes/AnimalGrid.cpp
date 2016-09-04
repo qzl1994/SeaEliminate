@@ -55,6 +55,11 @@ bool AnimalGrid::init(int row, int col)
 		}
 	}
 
+	while (isDeadMap())
+	{
+		updateMap();
+	}
+
 	// 加入触摸监听
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
@@ -65,6 +70,88 @@ bool AnimalGrid::init(int row, int col)
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
 	return true;
+}
+
+// 判断布局是否是死图
+bool AnimalGrid::isDeadMap()
+{
+	// 模拟交换，判断交换后是否能消除，如不能，那么就是个死图
+	auto swap = [](Animal** a, Animal** b)
+	{
+		auto temp = *a;
+		*a = *b;
+		*b = temp;
+	};
+
+	bool isDeadMap = true;
+
+	// 遍历每一个动物
+	for (int x = 0; x < m_col; x++)
+	{
+		for (int y = 0; y < m_row; y++)
+		{
+			// 跟左边的交换
+			if (x > 0)
+			{
+				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x - 1][y]);
+				if (canCrush())
+				{
+					isDeadMap = false;
+				}
+				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x - 1][y]);
+			}
+
+			// 跟右边的交换
+			if (x < m_col - 1)
+			{
+				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x + 1][y]);
+				if (canCrush())
+				{
+					isDeadMap = false;
+				}
+				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x + 1][y]);
+			}
+
+			// 跟上面的交换
+			if (y < m_row - 1)
+			{
+				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x][y + 1]);
+				if (canCrush())
+				{
+					isDeadMap = false;
+				}
+				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x][y + 1]);
+			}
+
+			// 跟下面的交换
+			if (y > 0)
+			{
+				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x][y - 1]);
+				if (canCrush())
+				{
+					isDeadMap = false;
+				}
+				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x][y - 1]);
+			}
+		}
+	}
+
+	m_crushAnimalGrid.clear();
+
+	return isDeadMap;
+}
+
+// 刷新布局
+void AnimalGrid::updateMap()
+{
+	for (int x = 0; x < m_col; x++)
+	{
+		for (int y = 0; y < m_row; y++)
+		{
+			m_AnimalGrid[x][y]->removeFromParent();
+			m_AnimalGrid[x][y] = createAnimal(x, y);
+		}
+	}
 }
 
 // 随机创建一个动物
@@ -252,12 +339,6 @@ bool AnimalGrid::canCrush()
 			// 如果连续数大于等于3，那么遍历的这些动物应当消除，把它们存入消除动物盒子
 			if (count >= 3)
 			{
-				if (count == 4)
-				{
-					log("---type:%d---x:%d---y:%d", m_animalSelected->getType(), m_animalSelected->getX(), m_animalSelected->getY());
-				}
-
-
 				for (int n = 0; n < count; n++)
 				{
 					auto animal = m_AnimalGrid[x][y + n];
@@ -619,6 +700,7 @@ bool AnimalGrid::checkGridClean()
 	return false;
 }
 
+
 //	开始消除
 void AnimalGrid::goCrush()
 {
@@ -633,7 +715,7 @@ void AnimalGrid::goCrush()
 		// 将新动物放到新动物盒子内，等待加入布局
 		m_newAnimalGrid.pushBack(newAnimal);
 
-		// 动物盒子内应当刷新的宝石暂时置为空
+		// 动物盒子内应当刷新的动物暂时置为空
 		m_AnimalGrid[animal->getX()][animal->getY()] = nullptr;
 
 		// 原有动物对象消除
@@ -712,7 +794,7 @@ void AnimalGrid::refreshAnimalsToNewPos(int col)
 			auto move = MoveBy::create(0.2*delta++, Vec2(0, -i--*GRID_WIDTH));
 			auto call = CallFunc::create([animal, p_animalBox, this](){
 				(*p_animalBox)[animal->getX()][animal->getY()] = animal;
-				// 从新宝石盒子中移除该宝石
+				// 从新动物盒子中移除该动物
 				m_newAnimalGrid.eraseObject(animal);
 			});
 
@@ -787,7 +869,7 @@ void AnimalGrid::onAnimalsCrushing(float dt)
 	// 清空消除动物盒子
 	m_crushAnimalGrid.clear(); 
 
-	// 刷新动物阵列，并开启刷新状态捕捉函数（刷新一遍结束，重新判断新阵列是否可消除）
+	// 刷新动物阵列，并开启刷新状态捕捉函数
 	refreshAnimalGrid();
 	this->schedule(schedule_selector(AnimalGrid::onAnimalsRefreshing));
 }
@@ -805,48 +887,45 @@ void AnimalGrid::onAnimalsRefreshing(float dt)
 
 		if (canCrush())
 		{
-
-			//如果能消除，那么继续消除
+			// 如果能消除，那么继续消除
 			goCrush();
-			schedule(schedule_selector(AnimalGrid::onAnimalsCrushing));
+			this->schedule(schedule_selector(AnimalGrid::onAnimalsCrushing));
 		}
 		else
 		{
 
-			////判断是否为死图，如果是，则执行一段文字动画，提示即将更新地图
-			//if (isDeadMap())
-			//{
-			//	log("cant crush any more, updating a new map!");
+			// 判断是否为死图，如果是，提示即将更新地图
+			if (isDeadMap())
+			{
+				auto winSize = Director::getInstance()->getWinSize();
+				auto label = Label::createWithTTF("Cant Crush Any More, Change!", "fonts/Marker Felt.ttf", 24);
+				label->setTextColor(Color4B::BLACK);
+				label->setPosition(winSize.width / 2, winSize.height / 2);
+				label->setOpacity(0);
+				this->getParent()->addChild(label,3);
 
-			//	auto winSize = Director::getInstance()->getWinSize();
-			//	auto label = Label::createWithTTF("Cant Crush Any More, Change!", "fonts/Marker Felt.ttf", 24);
-			//	label->setTextColor(Color4B::BLACK);
-			//	label->setPosition(winSize.width / 2, winSize.height / 2);
-			//	label->setOpacity(0);
-			//	this->getParent()->addChild(label);
+				// 提示文字淡入淡出后，更新地图，再开启触摸监听
+				auto fadein = FadeIn::create(0.5);
+				auto fadeout = FadeOut::create(0.5);
 
-			//	//提示文字淡入淡出后，更新地图，再开启触摸监听
-			//	auto fadein = FadeIn::create(0.5);
-			//	auto fadeout = FadeOut::create(0.5);
+				auto call = CallFunc::create([this, label](){
+					do
+					{
+						updateMap();
+					} while (isDeadMap());
 
-			//	auto call = CallFunc::create([this, label](){
-			//		do
-			//		{
-			//			updateMap();
-			//		} while (isDeadMap());
+					label->removeFromParent();
 
-			//		label->removeFromParent();
+					_eventDispatcher->resumeEventListenersForTarget(this);
+				});
 
-			//		_eventDispatcher->resumeEventListenersForTarget(this);
-			//	});
-
-			//	label->runAction(Sequence::create(fadein, DelayTime::create(2), fadeout, call, nullptr));
-			//}
-			//else
-			//{
-			//	// 如果不是死图，那么就直接开启触摸监听，等待下一轮的交互操作
-			//}
+				label->runAction(Sequence::create(fadein, DelayTime::create(2), fadeout, call, nullptr));
+			}
+			else
+			{
+				// 如果不是死图，那么就直接开启触摸监听，等待下一轮的交互操作
 				_eventDispatcher->resumeEventListenersForTarget(this);
+			}
 		}
 	}
 }

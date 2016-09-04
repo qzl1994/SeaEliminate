@@ -12,12 +12,12 @@ private:
 	int m_x;
 	int m_y;
 
-	int m_special;	// 特殊消标记
-
-	bool m_isNeedClean; // 消除标记
-
 	bool m_isSwaping; // 是否正在交换
 	bool m_isCrushing; // 是否正在消除
+
+
+	int m_special;	// 特殊消标记
+	bool m_isNeedClean; // 消除标记
 
 public:
 	// 根据动物类型以及坐标创建动物

@@ -61,6 +61,9 @@ public:
 	static AnimalGrid* create(int row, int col);
 	bool init(int row, int col);
 
+	void updateMap(); // 更新动物阵列
+	bool isDeadMap(); // 判断当前布局是否死图
+
 	int getRow() { return m_row; }
 	int getCol() { return m_col; }
 };

@@ -48,14 +48,19 @@ bool Animal::init(int type, int x, int y)
 
 void Animal::crush()
 {
-
-
 	// 开始消除，消除状态为真，直到消除动作结束，将动物移除渲染节点，并置消除状态为假
 	m_isCrushing = true;
 	auto action = FadeOut::create(0.2);
+
+	auto action1 = MoveTo::create(0.1, Vec2(this->getPosition().x, this->getPosition().y + 20));
+	auto action2 = MoveTo::create(0.1, Vec2(this->getPosition().x, this->getPosition().y - 40));
+	auto action3 = MoveTo::create(0.1, Vec2(this->getPosition().x, this->getPosition().y + 40));
+	auto action4 = MoveTo::create(0.1, Vec2(this->getPosition().x, this->getPosition().y - 20));
+
 	auto call = CallFunc::create([this](){
 		this->removeFromParent();
 		m_isCrushing = false;
 	});
-	this->runAction(Sequence::create(action, call, nullptr));
+
+	this->runAction(Sequence::create(action1, action2, action3, action4, action, call, nullptr));
 }
