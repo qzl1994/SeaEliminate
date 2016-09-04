@@ -7,3 +7,5 @@
 #define ANIMAL_ZORDER 1				// 动物渲染顺序
 
 #define MOVE_SPEED 0.2				// 交换速度
+
+#define TIME_PERCENT 100			// 游戏时间

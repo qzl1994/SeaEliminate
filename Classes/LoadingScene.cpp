@@ -49,6 +49,11 @@ bool LoadingLayer::init()
 	TextureCache::getInstance()->addImageAsync("texture/animal6.png", addTextureCallback);
 	TextureCache::getInstance()->addImageAsync("texture/animal7.png", addTextureCallback);
 	TextureCache::getInstance()->addImageAsync("texture/animal8.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/bonus.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/bonusbar.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/bonusbar_fill.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/gameover.png", addTextureCallback);
+
 
 	// 开启加载进度检测
 	this->schedule(schedule_selector(LoadingLayer::onTextureLoading));
@@ -64,7 +69,7 @@ bool LoadingLayer::init()
 void LoadingLayer::onTextureLoading(float dt)
 {
 	// 一旦图片加载完毕，那么进入游戏场景
-	if (m_texture_num == 10)
+	if (m_texture_num == 14)
 	{
 		this->unschedule(schedule_selector(LoadingLayer::onTextureLoading));
 
