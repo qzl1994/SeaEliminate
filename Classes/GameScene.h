@@ -7,6 +7,7 @@
 
 #include "AnimalGrid.h"
 #include "SystemHeader.h"
+#include "GameOverScene.h"
 
 using namespace ui;
 
@@ -20,6 +21,7 @@ public:
 	static void addBonus(int bonus);
 
 	virtual void onEnterTransitionDidFinish();
+	virtual void onExit();
 
 	CREATE_FUNC(GameLayer);
 

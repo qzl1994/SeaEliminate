@@ -82,8 +82,8 @@ void GameLayer::onReducingBonus(float dt)
 
 		publishScore();
 
-		//auto scene = GameOverScene::createScene();
-		//Director::getInstance()->replaceScene(TransitionFade::create(1.0, scene));
+		auto scene = GameOverLayer::createScene();
+		Director::getInstance()->replaceScene(TransitionFade::create(1.0, scene));
 	}
 }
 
@@ -121,4 +121,11 @@ void GameLayer::onEnterTransitionDidFinish()
 	Layer::onEnterTransitionDidFinish();
 
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("BGM.mp3", true);
+}
+
+void GameLayer::onExit()
+{
+	Layer::onExit();
+
+	SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
