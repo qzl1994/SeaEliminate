@@ -50,7 +50,7 @@ void Animal::crush()
 {
 
 
-	// 开始消除，消除状态为真，直到消除动作结束，将宝石移除渲染节点，并置消除状态为假
+	// 开始消除，消除状态为真，直到消除动作结束，将动物移除渲染节点，并置消除状态为假
 	m_isCrushing = true;
 	auto action = FadeOut::create(0.2);
 	auto call = CallFunc::create([this](){

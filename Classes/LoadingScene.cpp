@@ -55,6 +55,8 @@ bool LoadingLayer::init()
 
 	// Ô¤¼ÓÔØÒôÐ§
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("BGM.mp3");
+
+	SimpleAudioEngine::getInstance()->preloadEffect("cursh.mp3");
     
     return true;
 }
