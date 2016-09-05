@@ -1,6 +1,8 @@
 #include "GameOverScene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
+using namespace CocosDenshion;
 
 Scene* GameOverLayer::createScene()
 {
@@ -43,4 +45,18 @@ void GameOverLayer::onBackItemCallback(Ref* pSender)
 	// ·µ»ØÓÎÏ·
 	auto scene = GameLayer::createScene();
 	Director::getInstance()->replaceScene(TransitionFade::create(2, scene));
+}
+
+void GameOverLayer::onEnterTransitionDidFinish()
+{
+	Layer::onEnterTransitionDidFinish();
+
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("gameover.mp3", true);
+}
+
+void GameOverLayer::onExit()
+{
+	Layer::onExit();
+
+	SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }

@@ -17,11 +17,10 @@ public:
 	static cocos2d::Scene* createScene();
 
 	virtual bool init();
-
-	static void addBonus(int bonus);
-
 	virtual void onEnterTransitionDidFinish();
 	virtual void onExit();
+
+	static void addBonus(int bonus);
 
 	CREATE_FUNC(GameLayer);
 

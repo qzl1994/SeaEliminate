@@ -59,20 +59,20 @@ bool GameLayer::init()
 	bonus->setPosition(visibleSize.width - bonus->getContentSize().width / 2 - 10, 80);
 	this->addChild(bonus, 1);
 
+	// 分数
 	m_scorelabel = Label::createWithTTF("0", "fonts/Marker Felt.ttf", 24);
 	m_scorelabel->setAnchorPoint(Vec2(1, 0));
 	m_scorelabel->setPosition(visibleSize.width - 10, 35);
-	m_scorelabel->setTag(10);
 	m_scorelabel->enableOutline(Color4B::BLACK, 1);
 	this->addChild(m_scorelabel, 1);
 
 	return true;
 }
 
-
 // 倒计时
 void GameLayer::onReducingBonus(float dt)
 {
+	
 	m_bonusbar->setPercent(m_bonusbar->getPercent() - 0.2);
 
 	// 倒计时结束，游戏结束，保存游戏分数
@@ -85,17 +85,6 @@ void GameLayer::onReducingBonus(float dt)
 		auto scene = GameOverLayer::createScene();
 		Director::getInstance()->replaceScene(TransitionFade::create(1.0, scene));
 	}
-}
-
-// 加分
-void GameLayer::addBonus(int bonus)
-{
-	m_score += 20 * bonus;
-	char buf[100] = { 0 };
-	sprintf(buf, "%d", m_score);
-	m_scorelabel->setString(buf);
-
-	m_bonusbar->setPercent(m_bonusbar->getPercent() + bonus);
 }
 
 // 存储分数
@@ -114,6 +103,17 @@ void GameLayer::publishScore()
 	{
 		userdefault->setStringForKey("BestScore", score_str);
 	}
+}
+
+// 加分
+void GameLayer::addBonus(int bonus)
+{
+	m_score += 20 * bonus;
+	char buf[100] = { 0 };
+	sprintf(buf, "%d", m_score);
+	m_scorelabel->setString(buf);
+
+	m_bonusbar->setPercent(m_bonusbar->getPercent() + bonus);
 }
 
 void GameLayer::onEnterTransitionDidFinish()

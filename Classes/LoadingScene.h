@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "SimpleAudioEngine.h"
 
+#include "HomeScene.h"
 #include "GameScene.h"
 
 class LoadingLayer : public cocos2d::Layer
@@ -12,6 +13,7 @@ private:
 	int m_texture_num;	// 当前加载的纹理数
 
 	void onTextureLoading(float dt);
+
 public:
     static cocos2d::Scene* createScene();
 

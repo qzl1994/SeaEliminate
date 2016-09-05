@@ -11,6 +11,9 @@ public:
 
 	virtual bool init();
 
+	virtual void onEnterTransitionDidFinish();
+	virtual void onExit();
+
 	CREATE_FUNC(GameOverLayer);
 
 private:

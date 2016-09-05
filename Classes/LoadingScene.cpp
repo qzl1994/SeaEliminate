@@ -22,11 +22,10 @@ bool LoadingLayer::init()
     }
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	auto label = Label::createWithSystemFont("Loading...", "Arial", 48);
 	label->setPosition(visibleSize.width / 2, visibleSize.height / 2);
-	addChild(label);
+	this->addChild(label);
 
 	// 初始化加载纹理数
 	m_texture_num = 0;
@@ -53,32 +52,32 @@ bool LoadingLayer::init()
 	TextureCache::getInstance()->addImageAsync("texture/bonusbar.png", addTextureCallback);
 	TextureCache::getInstance()->addImageAsync("texture/bonusbar_fill.png", addTextureCallback);
 	TextureCache::getInstance()->addImageAsync("texture/gameover.png", addTextureCallback);
-
-
-	// 开启加载进度检测
-	this->schedule(schedule_selector(LoadingLayer::onTextureLoading));
+	TextureCache::getInstance()->addImageAsync("texture/home.png", addTextureCallback);
 
 	// 预加载音效
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("BGM.mp3");
+	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("WBGM.mp3");
+	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("gameover.mp3");
 
-	SimpleAudioEngine::getInstance()->preloadEffect("cursh.mp3");
-    
+	// 开启加载进度检测
+	this->schedule(schedule_selector(LoadingLayer::onTextureLoading));
+   
     return true;
 }
 
 void LoadingLayer::onTextureLoading(float dt)
 {
-	// 一旦图片加载完毕，那么进入游戏场景
-	if (m_texture_num == 14)
+	// 图片加载完毕，进入游戏场景
+	if (m_texture_num == 15)
 	{
 		this->unschedule(schedule_selector(LoadingLayer::onTextureLoading));
 
 		auto call = CallFunc::create([](){
-			auto scene = GameLayer::createScene();
+			auto scene = HomeLayer::createScene();
 			Director::getInstance()->replaceScene(TransitionFade::create(0.5, scene));
 		});
 
-		// 等待一会儿，进入
-		this->runAction(Sequence::create(DelayTime::create(0.51), call, nullptr));
+		// 延时进入
+		this->runAction(Sequence::create(DelayTime::create(0.5), call, nullptr));
 	}
 }
