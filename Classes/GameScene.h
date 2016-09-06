@@ -1,4 +1,4 @@
-#ifndef __GAME_SCENE_H__
+ï»¿#ifndef __GAME_SCENE_H__
 #define __GAME_SCENE_H__
 
 #include "cocos2d.h"
@@ -22,18 +22,24 @@ public:
 
 	static void addBonus(int bonus);
 
+	void menuPauseCallback(cocos2d::Ref* pSender);
+	void menuBackCallback(cocos2d::Ref* pSender);
+	void menuResumeCallback(cocos2d::Ref* pSender);
+
 	CREATE_FUNC(GameLayer);
 
 private:
 
 	AnimalGrid* m_AnimalGrid;
 
-	static LoadingBar* m_bonusbar; // ¼ÆÊ±Ìõ
+	static LoadingBar* m_bonusbar; // è®¡æ—¶æ¡
 	static Label* m_scorelabel;
-	static int m_score; // ·ÖÊı
+	static int m_score; // åˆ†æ•°
 
-	void onReducingBonus(float dt); //¿ªÆôµ¹¼ÆÊ±
-	void publishScore(); // ´æ´¢ÓÎÏ··ÖÊı
+	cocos2d::Menu* menu;
+
+	void onReducingBonus(float dt); //å¼€å¯å€’è®¡æ—¶
+	void publishScore(); // å­˜å‚¨æ¸¸æˆåˆ†æ•°
 };
 
 #endif

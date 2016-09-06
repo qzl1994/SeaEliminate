@@ -1,4 +1,4 @@
-#ifndef __ANIMAL_H__
+ï»¿#ifndef __ANIMAL_H__
 #define __ANIMAL_H__
 
 #include "cocos2d.h"
@@ -6,21 +6,21 @@
 class Animal : public cocos2d::Sprite
 {
 private:
-	// ÀàĞÍ
+	// ç±»å‹
 	int m_type;
-	// ×ø±ê
+	// åæ ‡
 	int m_x;
 	int m_y;
 
-	bool m_isSwaping; // ÊÇ·ñÕıÔÚ½»»»
-	bool m_isCrushing; // ÊÇ·ñÕıÔÚÏû³ı
+	bool m_isSwaping; // æ˜¯å¦æ­£åœ¨äº¤æ¢
+	bool m_isCrushing; // æ˜¯å¦æ­£åœ¨æ¶ˆé™¤
 
 
-	int m_special;	// ÌØÊâÏû±ê¼Ç
-	bool m_isNeedClean; // Ïû³ı±ê¼Ç
+	int m_special;	// ç‰¹æ®Šæ¶ˆæ ‡è®°
+	bool m_isNeedClean; // æ¶ˆé™¤æ ‡è®°
 
 public:
-	// ¸ù¾İ¶¯ÎïÀàĞÍÒÔ¼°×ø±ê´´½¨¶¯Îï
+	// æ ¹æ®åŠ¨ç‰©ç±»å‹ä»¥åŠåæ ‡åˆ›å»ºåŠ¨ç‰©
 	static Animal* createByType(int type, int x, int y);
 	bool init(int type, int x, int y);
 
@@ -44,7 +44,7 @@ public:
 
 	void setSwapingState(bool state) { m_isSwaping = state; }
 
-	void crush(); //Ïû³ı
+	void crush(); //æ¶ˆé™¤
 
 };
 

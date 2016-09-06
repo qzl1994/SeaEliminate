@@ -1,4 +1,4 @@
-#include "GameScene.h"
+ï»¿#include "GameScene.h"
 
 USING_NS_CC;
 using namespace CocosDenshion;
@@ -29,37 +29,44 @@ bool GameLayer::init()
 
 	auto textureCache = TextureCache::getInstance();
 
-	// ¼ÓÔØ±³¾°Í¼
+	// åŠ è½½èƒŒæ™¯å›¾
 	auto bg = Sprite::createWithTexture(textureCache->getTextureForKey("texture/background.png"));
 	bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(bg, 0);
 
-	// ³õÊ¼»¯Íø¸ñÊý¾Ý
+	// åˆå§‹åŒ–æš‚åœæŒ‰é’®
+	auto pauseSprite = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/pause.png"));
+	auto pauseMenuItem = MenuItemSprite::create(pauseSprite, pauseSprite, CC_CALLBACK_1(GameLayer::menuPauseCallback, this));
+	auto pauseMenu = Menu::create(pauseMenuItem, NULL);
+	pauseMenu->setPosition(Vec2(40, visibleSize.height - 28));
+	this->addChild(pauseMenu, 20);
+
+	// åˆå§‹åŒ–ç½‘æ ¼æ•°æ®
 	m_AnimalGrid = AnimalGrid::create(ROW, COL);
 	m_AnimalGrid->setAnchorPoint(Vec2(0, 0));
 	m_AnimalGrid->setPosition((visibleSize.width - ROW*GRID_WIDTH) / 2, GRID_WIDTH + 40);
 	this->addChild(m_AnimalGrid, 1);
 
-	// µ¹¼ÆÊ±ÌõÍâ¿ò
+	// å€’è®¡æ—¶æ¡å¤–æ¡†
 	auto bounusbar_frame = Sprite::createWithTexture(textureCache->getTextureForKey("texture/bonusbar.png"));
 	bounusbar_frame->setPosition(Vec2(visibleSize.width / 2, bounusbar_frame->getContentSize().height / 2 + 40));
 	this->addChild(bounusbar_frame, 1);
 
-	// µ¹¼ÆÊ±Ìõ
+	// å€’è®¡æ—¶æ¡
 	m_bonusbar = LoadingBar::create("texture/bonusbar_fill.png");
 	m_bonusbar->setPercent(TIME_PERCENT);
 	m_bonusbar->setPosition(bounusbar_frame->getPosition());
 	this->addChild(m_bonusbar, 1);
 
-	// ¿ªÆôµ¹¼ÆÊ±
+	// å¼€å¯å€’è®¡æ—¶
 	this->schedule(schedule_selector(GameLayer::onReducingBonus), 0.1);
 
-	// ·ÖÊýÌõ
+	// åˆ†æ•°æ¡
 	auto bonus = Sprite::createWithTexture(textureCache->getTextureForKey("texture/bonus.png"));
 	bonus->setPosition(visibleSize.width - bonus->getContentSize().width / 2 - 10, 80);
 	this->addChild(bonus, 1);
 
-	// ·ÖÊý
+	// åˆ†æ•°
 	m_scorelabel = Label::createWithTTF("0", "fonts/Marker Felt.ttf", 24);
 	m_scorelabel->setAnchorPoint(Vec2(1, 0));
 	m_scorelabel->setPosition(visibleSize.width - 10, 35);
@@ -69,13 +76,13 @@ bool GameLayer::init()
 	return true;
 }
 
-// µ¹¼ÆÊ±
+// å€’è®¡æ—¶
 void GameLayer::onReducingBonus(float dt)
 {
 	
 	m_bonusbar->setPercent(m_bonusbar->getPercent() - 0.2);
 
-	// µ¹¼ÆÊ±½áÊø£¬ÓÎÏ·½áÊø£¬±£´æÓÎÏ··ÖÊý
+	// å€’è®¡æ—¶ç»“æŸï¼Œæ¸¸æˆç»“æŸï¼Œä¿å­˜æ¸¸æˆåˆ†æ•°
 	if (m_bonusbar->getPercent() == 0)
 	{
 		this->unschedule(schedule_selector(GameLayer::onReducingBonus));
@@ -87,17 +94,17 @@ void GameLayer::onReducingBonus(float dt)
 	}
 }
 
-// ´æ´¢·ÖÊý
+// å­˜å‚¨åˆ†æ•°
 void GameLayer::publishScore()
 {
 	auto userdefault = UserDefault::getInstance();
 
-	// ´æ´¢±¾´ÎÓÎÏ··ÖÊý
+	// å­˜å‚¨æœ¬æ¬¡æ¸¸æˆåˆ†æ•°
 	char score_str[100] = { 0 };
 	sprintf(score_str, "%d", m_score);
 	userdefault->setStringForKey("LastScore", score_str);
 
-	// ´æ´¢×î¼ÑÓÎÏ··ÖÊý
+	// å­˜å‚¨æœ€ä½³æ¸¸æˆåˆ†æ•°
 	auto bestscore = userdefault->getStringForKey("BestScore");
 	if (m_score > atoi(bestscore.c_str()))
 	{
@@ -105,7 +112,7 @@ void GameLayer::publishScore()
 	}
 }
 
-// ¼Ó·Ö
+// åŠ åˆ†
 void GameLayer::addBonus(int bonus)
 {
 	m_score += 20 * bonus;
@@ -114,6 +121,57 @@ void GameLayer::addBonus(int bonus)
 	m_scorelabel->setString(buf);
 
 	m_bonusbar->setPercent(m_bonusbar->getPercent() + bonus);
+}
+
+// æš‚åœæ¸¸æˆ
+void GameLayer::menuPauseCallback(Ref* pSender)
+{
+	Size visibleSize = Director::getInstance()->getVisibleSize();
+
+	// æš‚åœå½“å‰å±‚ä¸­çš„node
+	this->pause();
+
+	for (const auto& node : this->getChildren())
+	{
+		node->pause();
+	}
+
+	// è¿”å›žä¸»èœå•
+	auto backNormal = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/back.png"));
+	auto backSelected = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/back-on.png"));
+	auto backMenuItem = MenuItemSprite::create(backNormal, backSelected,
+		CC_CALLBACK_1(GameLayer::menuBackCallback, this));
+
+	// ç»§ç»­æ¸¸æˆ
+	auto resumeNormal = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/resume.png"));
+	auto resumeSelected = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/resume-on.png"));
+	auto resumeMenuItem = MenuItemSprite::create(resumeNormal, resumeSelected,
+		CC_CALLBACK_1(GameLayer::menuResumeCallback, this));
+
+	menu = Menu::create(backMenuItem, resumeMenuItem, NULL);
+	menu->alignItemsVertically();
+	menu->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+
+	this->addChild(menu, 20);
+}
+
+// è¿”å›žä¸»èœå•
+void GameLayer::menuBackCallback(Ref* pSender)
+{
+	Director::getInstance()->popScene();
+}
+
+// è¿”å›žæ¸¸æˆ
+void GameLayer::menuResumeCallback(Ref* pSender)
+{
+	this->resume();
+
+	for (const auto& node : this->getChildren())
+	{
+		node->resume();
+	}
+
+	this->removeChild(menu);
 }
 
 void GameLayer::onEnterTransitionDidFinish()

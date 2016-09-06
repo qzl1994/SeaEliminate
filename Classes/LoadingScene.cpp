@@ -1,4 +1,4 @@
-#include "LoadingScene.h"
+ï»¿#include "LoadingScene.h"
 
 USING_NS_CC;
 using namespace CocosDenshion;
@@ -27,17 +27,17 @@ bool LoadingLayer::init()
 	label->setPosition(visibleSize.width / 2, visibleSize.height / 2);
 	this->addChild(label);
 
-	// ³õÊ¼»¯¼ÓÔØÎÆÀíÊý
+	// åˆå§‹åŒ–åŠ è½½çº¹ç†æ•°
 	m_texture_num = 0;
 	int *ptexture_num = &m_texture_num;
 
-	//¼ÓÔØÍê±Ï»Øµ÷
+	//åŠ è½½å®Œæ¯•å›žè°ƒ
 	auto addTextureCallback = [ptexture_num](Texture2D* texture)
 	{
 		(*ptexture_num)++;
 	};
 
-	// Òì²½Ô¤¼ÓÔØÎÆÀíÍ¼Æ¬
+	// å¼‚æ­¥é¢„åŠ è½½çº¹ç†å›¾ç‰‡
 	TextureCache::getInstance()->addImageAsync("texture/background.png", addTextureCallback);
 	TextureCache::getInstance()->addImageAsync("texture/grid.png", addTextureCallback);
 	TextureCache::getInstance()->addImageAsync("texture/animal1.png", addTextureCallback);
@@ -53,13 +53,18 @@ bool LoadingLayer::init()
 	TextureCache::getInstance()->addImageAsync("texture/bonusbar_fill.png", addTextureCallback);
 	TextureCache::getInstance()->addImageAsync("texture/gameover.png", addTextureCallback);
 	TextureCache::getInstance()->addImageAsync("texture/home.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/pause.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/back.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/back-on.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/resume.png", addTextureCallback);
+	TextureCache::getInstance()->addImageAsync("texture/resume-on.png", addTextureCallback);
 
-	// Ô¤¼ÓÔØÒôÐ§
+	// é¢„åŠ è½½éŸ³æ•ˆ
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("BGM.mp3");
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("WBGM.mp3");
 	SimpleAudioEngine::getInstance()->preloadBackgroundMusic("gameover.mp3");
 
-	// ¿ªÆô¼ÓÔØ½ø¶È¼ì²â
+	// å¼€å¯åŠ è½½è¿›åº¦æ£€æµ‹
 	this->schedule(schedule_selector(LoadingLayer::onTextureLoading));
    
     return true;
@@ -67,8 +72,8 @@ bool LoadingLayer::init()
 
 void LoadingLayer::onTextureLoading(float dt)
 {
-	// Í¼Æ¬¼ÓÔØÍê±Ï£¬½øÈëÓÎÏ·³¡¾°
-	if (m_texture_num == 15)
+	// å›¾ç‰‡åŠ è½½å®Œæ¯•ï¼Œè¿›å…¥æ¸¸æˆåœºæ™¯
+	if (m_texture_num == 20)
 	{
 		this->unschedule(schedule_selector(LoadingLayer::onTextureLoading));
 
@@ -77,7 +82,7 @@ void LoadingLayer::onTextureLoading(float dt)
 			Director::getInstance()->replaceScene(TransitionFade::create(0.5, scene));
 		});
 
-		// ÑÓÊ±½øÈë
+		// å»¶æ—¶è¿›å…¥
 		this->runAction(Sequence::create(DelayTime::create(0.5), call, nullptr));
 	}
 }

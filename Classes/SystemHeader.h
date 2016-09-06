@@ -1,11 +1,11 @@
-#define ROW 8						// ĞĞÊı
-#define COL 8						// ÁĞÊı
-#define ANIMAL_NUM 8				// ¶¯ÎïÊıÁ¿
-#define GRID_WIDTH 60				// Ò»¸ö¸ñ×ÓµÄÏñËØ
+ï»¿#define ROW 8						// è¡Œæ•°
+#define COL 8						// åˆ—æ•°
+#define ANIMAL_NUM 8				// åŠ¨ç‰©æ•°é‡
+#define GRID_WIDTH 60				// ä¸€ä¸ªæ ¼å­çš„åƒç´ 
 
-#define NODE_ZORDER 0				// ¸ñ×ÓäÖÈ¾Ë³Ğò
-#define ANIMAL_ZORDER 1				// ¶¯ÎïäÖÈ¾Ë³Ğò
+#define NODE_ZORDER 0				// æ ¼å­æ¸²æŸ“é¡ºåº
+#define ANIMAL_ZORDER 1				// åŠ¨ç‰©æ¸²æŸ“é¡ºåº
 
-#define MOVE_SPEED 0.2				// ½»»»ËÙ¶È
+#define MOVE_SPEED 0.2				// äº¤æ¢é€Ÿåº¦
 
-#define TIME_PERCENT 100			// ÓÎÏ·Ê±¼ä
+#define TIME_PERCENT 100			// æ¸¸æˆæ—¶é—´

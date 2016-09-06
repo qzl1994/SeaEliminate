@@ -1,4 +1,4 @@
-#include "Animal.h"
+ï»¿#include "Animal.h"
 #include "GameScene.h"
 
 USING_NS_CC;
@@ -36,12 +36,12 @@ bool Animal::init(int type, int x, int y)
 
 	m_isNeedClean = false;
 
-	// ¸ù¾İ×ÊÔ´Ãû³õÊ¼»¯ÎÆÀí
+	// æ ¹æ®èµ„æºååˆå§‹åŒ–çº¹ç†
 	char name[100] = { 0 };
 	sprintf(name, "texture/animal%d.png", m_type);
 	this->initWithTexture(TextureCache::getInstance()->getTextureForKey(name));
 
-	// ×óÏÂ½ÇÎªÃªµã
+	// å·¦ä¸‹è§’ä¸ºé”šç‚¹
 	this->setAnchorPoint(Vec2(0, 0)); 
 
 	return true;
@@ -51,7 +51,7 @@ void Animal::crush()
 {
 	GameLayer::addBonus(1);
 
-	// ¿ªÊ¼Ïû³ı£¬Ïû³ı×´Ì¬ÎªÕæ£¬Ö±µ½Ïû³ı¶¯×÷½áÊø£¬½«¶¯ÎïÒÆ³ıäÖÈ¾½Úµã£¬²¢ÖÃÏû³ı×´Ì¬Îª¼Ù
+	// å¼€å§‹æ¶ˆé™¤ï¼Œæ¶ˆé™¤çŠ¶æ€ä¸ºçœŸï¼Œç›´åˆ°æ¶ˆé™¤åŠ¨ä½œç»“æŸï¼Œå°†åŠ¨ç‰©ç§»é™¤æ¸²æŸ“èŠ‚ç‚¹ï¼Œå¹¶ç½®æ¶ˆé™¤çŠ¶æ€ä¸ºå‡
 	m_isCrushing = true;
 	auto action = FadeOut::create(0.2);
 

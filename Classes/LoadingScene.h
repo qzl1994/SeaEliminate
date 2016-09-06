@@ -1,4 +1,4 @@
-#ifndef __LOADING_SCENE_H__
+ï»¿#ifndef __LOADING_SCENE_H__
 #define __LOADING_SCENE_H__
 
 #include "cocos2d.h"
@@ -10,7 +10,7 @@
 class LoadingLayer : public cocos2d::Layer
 {
 private:
-	int m_texture_num;	// µ±Ç°¼ÓÔØµÄÎÆÀíÊı
+	int m_texture_num;	// å½“å‰åŠ è½½çš„çº¹ç†æ•°
 
 	void onTextureLoading(float dt);
 

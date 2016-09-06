@@ -1,4 +1,4 @@
-#include "AnimalGrid.h"
+ï»¿#include "AnimalGrid.h"
 
 USING_NS_CC;
 using namespace CocosDenshion;
@@ -31,26 +31,26 @@ bool AnimalGrid::init(int row, int col)
 	m_animalSelected = nullptr;
 	m_animalSwapped = nullptr;
 
-	// ¸ù¾İĞĞÁĞ³õÊ¼»¯Ò»¸ö¿ÕµÄ±¦Ê¯ÈİÆ÷´óĞ¡
+	// æ ¹æ®è¡Œåˆ—åˆå§‹åŒ–ä¸€ä¸ªç©ºçš„å®çŸ³å®¹å™¨å¤§å°
 	m_AnimalGrid.resize(m_row);
 	for (auto &vec : m_AnimalGrid)
 	{
 		vec.resize(m_col);
 	}
 
-	// ¸ù¾İ²¼¾Ö´óĞ¡´´½¨³öÕóÁĞ
+	// æ ¹æ®å¸ƒå±€å¤§å°åˆ›å»ºå‡ºé˜µåˆ—
 	for (int x = 0; x < m_row; x++)
 	{
 		for (int y = 0; y < m_col; y++)
 		{
-			// Í¸Ã÷¸ñ×Ó±³¾°
+			// é€æ˜æ ¼å­èƒŒæ™¯
 			auto node = Sprite::create("texture/grid.png");
 			node->setAnchorPoint(Vec2(0, 0));
 			node->setPosition(x*GRID_WIDTH, y*GRID_WIDTH);
 			node->setOpacity(100);
 			this->addChild(node, NODE_ZORDER);
 
-			// Îª¶¯ÎïÈİÆ÷Ìî³ä¶¯Îï¶ÔÏó
+			// ä¸ºåŠ¨ç‰©å®¹å™¨å¡«å……åŠ¨ç‰©å¯¹è±¡
 			m_AnimalGrid[x][y] = createAnimal(x, y);
 		}
 	}
@@ -60,22 +60,22 @@ bool AnimalGrid::init(int row, int col)
 		updateMap();
 	}
 
-	// ¼ÓÈë´¥Ãş¼àÌı
+	// åŠ å…¥è§¦æ‘¸ç›‘å¬
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 	listener->onTouchBegan = CC_CALLBACK_2(AnimalGrid::onTouchBegan, this);
 	listener->onTouchMoved = CC_CALLBACK_2(AnimalGrid::onTouchMoved, this);
 
-	// Ìí¼Ó´¥ÃşÊÂ¼ş¼àÌıÆ÷
+	// æ·»åŠ è§¦æ‘¸äº‹ä»¶ç›‘å¬å™¨
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
 	return true;
 }
 
-// ÅĞ¶Ï²¼¾ÖÊÇ·ñÊÇËÀÍ¼
+// åˆ¤æ–­å¸ƒå±€æ˜¯å¦æ˜¯æ­»å›¾
 bool AnimalGrid::isDeadMap()
 {
-	// Ä£Äâ½»»»£¬ÅĞ¶Ï½»»»ºóÊÇ·ñÄÜÏû³ı£¬Èç²»ÄÜ£¬ÄÇÃ´¾ÍÊÇ¸öËÀÍ¼
+	// æ¨¡æ‹Ÿäº¤æ¢ï¼Œåˆ¤æ–­äº¤æ¢åæ˜¯å¦èƒ½æ¶ˆé™¤ï¼Œå¦‚ä¸èƒ½ï¼Œé‚£ä¹ˆå°±æ˜¯ä¸ªæ­»å›¾
 	auto swap = [](Animal** a, Animal** b)
 	{
 		auto temp = *a;
@@ -85,12 +85,12 @@ bool AnimalGrid::isDeadMap()
 
 	bool isDeadMap = true;
 
-	// ±éÀúÃ¿Ò»¸ö¶¯Îï
+	// éå†æ¯ä¸€ä¸ªåŠ¨ç‰©
 	for (int x = 0; x < m_col; x++)
 	{
 		for (int y = 0; y < m_row; y++)
 		{
-			// ¸ú×ó±ßµÄ½»»»
+			// è·Ÿå·¦è¾¹çš„äº¤æ¢
 			if (x > 0)
 			{
 				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x - 1][y]);
@@ -101,7 +101,7 @@ bool AnimalGrid::isDeadMap()
 				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x - 1][y]);
 			}
 
-			// ¸úÓÒ±ßµÄ½»»»
+			// è·Ÿå³è¾¹çš„äº¤æ¢
 			if (x < m_col - 1)
 			{
 				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x + 1][y]);
@@ -112,7 +112,7 @@ bool AnimalGrid::isDeadMap()
 				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x + 1][y]);
 			}
 
-			// ¸úÉÏÃæµÄ½»»»
+			// è·Ÿä¸Šé¢çš„äº¤æ¢
 			if (y < m_row - 1)
 			{
 				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x][y + 1]);
@@ -123,7 +123,7 @@ bool AnimalGrid::isDeadMap()
 				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x][y + 1]);
 			}
 
-			// ¸úÏÂÃæµÄ½»»»
+			// è·Ÿä¸‹é¢çš„äº¤æ¢
 			if (y > 0)
 			{
 				swap(&m_AnimalGrid[x][y], &m_AnimalGrid[x][y - 1]);
@@ -141,7 +141,7 @@ bool AnimalGrid::isDeadMap()
 	return isDeadMap;
 }
 
-// Ë¢ĞÂ²¼¾Ö
+// åˆ·æ–°å¸ƒå±€
 void AnimalGrid::updateMap()
 {
 	for (int x = 0; x < m_col; x++)
@@ -154,7 +154,7 @@ void AnimalGrid::updateMap()
 	}
 }
 
-// Ëæ»ú´´½¨Ò»¸ö¶¯Îï
+// éšæœºåˆ›å»ºä¸€ä¸ªåŠ¨ç‰©
 Animal* AnimalGrid::createAnimal(int x, int y)
 {
 	Animal* animal = nullptr;
@@ -176,7 +176,7 @@ Animal* AnimalGrid::createAnimal(int x, int y)
 	return animal;
 }
 
-// ÅĞ¶Ï²¼¾ÖºÏ·¨
+// åˆ¤æ–­å¸ƒå±€åˆæ³•
 bool AnimalGrid::isAnimalLegal(Animal* animal, int x, int y)
 {
 	bool isXLegal = true;
@@ -209,20 +209,20 @@ bool AnimalGrid::isAnimalLegal(Animal* animal, int x, int y)
 	return isXLegal && isYLegal;
 }
 
-// ´¥ÃşÊÂ¼ş
+// è§¦æ‘¸äº‹ä»¶
 bool AnimalGrid::onTouchBegan(Touch* touch, Event* event)
 {
-	// ½«´¥Ãşµã×ø±ê×ª»¯ÎªÄ£ĞÍ×ø±ê
+	// å°†è§¦æ‘¸ç‚¹åæ ‡è½¬åŒ–ä¸ºæ¨¡å‹åæ ‡
 	auto pos = this->convertToNodeSpace(touch->getLocation());
 
-	// ÊÇ·ñ°´ÔÚ²¼¾ÖÉÏ
+	// æ˜¯å¦æŒ‰åœ¨å¸ƒå±€ä¸Š
 	if (Rect(0, 0, m_col*GRID_WIDTH, m_row*GRID_WIDTH).containsPoint(pos))
 	{
-		// µÃµ½²¼¾Ö×ø±ê
+		// å¾—åˆ°å¸ƒå±€åæ ‡
 		int x = pos.x / GRID_WIDTH;
 		int y = pos.y / GRID_WIDTH;
 
-		// µÃµ½µ±Ç°Ñ¡ÖĞµÄ¶¯Îï
+		// å¾—åˆ°å½“å‰é€‰ä¸­çš„åŠ¨ç‰©
 		m_animalSelected = m_AnimalGrid[x][y];
 		
 		return true;
@@ -240,44 +240,44 @@ void AnimalGrid::onTouchMoved(Touch* touch, Event* event)
 		return;
 	}
 
-	// ÒÑÑ¡Ôñ¶¯ÎïµÄ×ø±ê
+	// å·²é€‰æ‹©åŠ¨ç‰©çš„åæ ‡
 	int startX = m_animalSelected->getX();
 	int startY = m_animalSelected->getY();
 
-	// ´¥ÃşµãµÄ²¼¾Ö×ø±ê
+	// è§¦æ‘¸ç‚¹çš„å¸ƒå±€åæ ‡
 	auto pos = this->convertToNodeSpace(touch->getLocation());
 	int touchX = pos.x / GRID_WIDTH;
 	int touchY = pos.y / GRID_WIDTH;
 
-	// Èç¹û´¥Ãşµã²»ÔÚ²¼¾ÖÄÚ£¬»òÕß´¥Ãşµã²¼¾Ö×ø±êºÍÒÑÑ¡¶¯Îï²¼¾Ö×ø±êÒ»Ñù£¬ÄÇÃ´·µ»Ø
+	// å¦‚æœè§¦æ‘¸ç‚¹ä¸åœ¨å¸ƒå±€å†…ï¼Œæˆ–è€…è§¦æ‘¸ç‚¹å¸ƒå±€åæ ‡å’Œå·²é€‰åŠ¨ç‰©å¸ƒå±€åæ ‡ä¸€æ ·ï¼Œé‚£ä¹ˆè¿”å›
 	if (!Rect(0, 0, m_col*GRID_WIDTH, m_row*GRID_WIDTH).containsPoint(pos) || 
 		Vec2(touchX, touchY) == Vec2(startX, startY))
 	{
 		return;
 	}
 
-	// ÅĞ¶ÏÒÑÑ¡¶¯ÎïµÄ²¼¾Ö×ø±êÓë´¥ÃşµãµÄ²¼¾Ö×ø±êÊÇ·ñÖ±½ÇÏà¸ôÒ»¸öµ¥Î»
+	// åˆ¤æ–­å·²é€‰åŠ¨ç‰©çš„å¸ƒå±€åæ ‡ä¸è§¦æ‘¸ç‚¹çš„å¸ƒå±€åæ ‡æ˜¯å¦ç›´è§’ç›¸éš”ä¸€ä¸ªå•ä½
 	if (abs(startX - touchX) + abs(startY - touchY) != 1)
 	{
 		return;
 	}
 
-	// ÓàÏÂµÄÇé¿ö£¬´¥ÃşµãÉÏÃæµÄ¶¯Îï¾ÍÊÇÓû½øĞĞ½»»»µÄ¶¯Îï
-	// »ñÈ¡Óû½»»»µÄ¶¯Îï
+	// ä½™ä¸‹çš„æƒ…å†µï¼Œè§¦æ‘¸ç‚¹ä¸Šé¢çš„åŠ¨ç‰©å°±æ˜¯æ¬²è¿›è¡Œäº¤æ¢çš„åŠ¨ç‰©
+	// è·å–æ¬²äº¤æ¢çš„åŠ¨ç‰©
 	m_animalSwapped = m_AnimalGrid[touchX][touchY];
 
-	// ½»»»¶¯Îï
+	// äº¤æ¢åŠ¨ç‰©
 	swapAnimals(m_animalSelected, m_animalSwapped);
 
-	// ¿ªÆô½»»»×´Ì¬²¶×½º¯Êı
+	// å¼€å¯äº¤æ¢çŠ¶æ€æ•æ‰å‡½æ•°
 	this->schedule(schedule_selector(AnimalGrid::onAnimalsSwaping));
 
 }
 
-// ½»»»¶¯Îï
+// äº¤æ¢åŠ¨ç‰©
 void AnimalGrid::swapAnimals(Animal *animalA, Animal *animalB)
 {
-	_eventDispatcher->pauseEventListenersForTarget(this); // ½»»»¿ªÊ¼£¬¹Ø±Õ´¥Ãş¼àÌı
+	_eventDispatcher->pauseEventListenersForTarget(this); // äº¤æ¢å¼€å§‹ï¼Œå…³é—­è§¦æ‘¸ç›‘å¬
 
 	auto temp = m_AnimalGrid[animalA->getX()][animalA->getY()];
 	m_AnimalGrid[animalA->getX()][animalA->getY()] = m_AnimalGrid[animalB->getX()][animalB->getY()];
@@ -295,10 +295,10 @@ void AnimalGrid::swapAnimals(Animal *animalA, Animal *animalB)
 	swapAnimalToNewPos(animalB);
 }
 
-// ¶¯ÎïÒÆ¶¯Î»ÖÃ
+// åŠ¨ç‰©ç§»åŠ¨ä½ç½®
 void AnimalGrid::swapAnimalToNewPos(Animal* animal)
 {
-	// ÉèÖÃ¶¯Îï½»»»×´Ì¬ÎªÕæ£¬ÒÆ¶¯½áÊøÔÙÉèÖÃÎª¼Ù
+	// è®¾ç½®åŠ¨ç‰©äº¤æ¢çŠ¶æ€ä¸ºçœŸï¼Œç§»åŠ¨ç»“æŸå†è®¾ç½®ä¸ºå‡
 	animal->setSwapingState(true);
 
 	auto move = MoveTo::create(MOVE_SPEED, Vec2(animal->getX() * GRID_WIDTH, animal->getY() * GRID_WIDTH));
@@ -309,14 +309,14 @@ void AnimalGrid::swapAnimalToNewPos(Animal* animal)
 	animal->runAction(Sequence::create(move, call, nullptr));
 }
 
-// ÅĞ¶ÏÏû³ı
+// åˆ¤æ–­æ¶ˆé™¤
 bool AnimalGrid::canCrush()
 {
-	int count = 0; // Á¬ĞøÊı
-	Animal *AnimalBegin = nullptr; // ÆğÊ¼±éÀúµÄ¶¯Îï
-	Animal *AnimalNext = nullptr; // ´ÓÆğÊ¼¶¯Îï¿ªÊ¼ÍùÇ°±éÀúµÄ¶¯Îï
+	int count = 0; // è¿ç»­æ•°
+	Animal *AnimalBegin = nullptr; // èµ·å§‹éå†çš„åŠ¨ç‰©
+	Animal *AnimalNext = nullptr; // ä»èµ·å§‹åŠ¨ç‰©å¼€å§‹å¾€å‰éå†çš„åŠ¨ç‰©
 
-	// ±éÀúÃ¿Ò»ÁĞ
+	// éå†æ¯ä¸€åˆ—
 	for (int x = 0; x < m_col; x++)
 	{
 		for (int y = 0; y < m_row - 1;)
@@ -325,7 +325,7 @@ bool AnimalGrid::canCrush()
 			AnimalBegin = m_AnimalGrid[x][y];
 			AnimalNext = m_AnimalGrid[x][y + 1];
 
-			// Èç¹ûÁ¬Ğø³öÏÖÍ¬ÀàĞÍ
+			// å¦‚æœè¿ç»­å‡ºç°åŒç±»å‹
 			while (AnimalBegin->getType() == AnimalNext->getType())
 			{
 				count++;
@@ -336,7 +336,7 @@ bool AnimalGrid::canCrush()
 				}
 				AnimalNext = m_AnimalGrid[x][nextIndex];
 			}
-			// Èç¹ûÁ¬ĞøÊı´óÓÚµÈÓÚ3£¬ÄÇÃ´±éÀúµÄÕâĞ©¶¯ÎïÓ¦µ±Ïû³ı£¬°ÑËüÃÇ´æÈëÏû³ı¶¯ÎïºĞ×Ó
+			// å¦‚æœè¿ç»­æ•°å¤§äºç­‰äº3ï¼Œé‚£ä¹ˆéå†çš„è¿™äº›åŠ¨ç‰©åº”å½“æ¶ˆé™¤ï¼ŒæŠŠå®ƒä»¬å­˜å…¥æ¶ˆé™¤åŠ¨ç‰©ç›’å­
 			if (count >= 3)
 			{
 				for (int n = 0; n < count; n++)
@@ -349,7 +349,7 @@ bool AnimalGrid::canCrush()
 		}
 	}
 
-	// ±éÀúÃ¿Ò»ĞĞ
+	// éå†æ¯ä¸€è¡Œ
 	for (int y = 0; y < m_row; y++)
 	{
 		for (int x = 0; x < m_col - 1;)
@@ -373,7 +373,7 @@ bool AnimalGrid::canCrush()
 				{
 					auto animal = m_AnimalGrid[x + n][y];
 
-					// ÓĞ¿ÉÄÜÓĞ¶¯ÎïÍ¬Ê±ĞĞÁĞ¿ÉÏû³ı£¬ÄÇÃ´²»ÄÜÖØ¸´´æ´¢µ½Ïû³ı¶¯ÎïºĞ×Ó£¬¹ÊĞèÌí¼ÓÒ»´ÎÅĞ¶Ï
+					// æœ‰å¯èƒ½æœ‰åŠ¨ç‰©åŒæ—¶è¡Œåˆ—å¯æ¶ˆé™¤ï¼Œé‚£ä¹ˆä¸èƒ½é‡å¤å­˜å‚¨åˆ°æ¶ˆé™¤åŠ¨ç‰©ç›’å­ï¼Œæ•…éœ€æ·»åŠ ä¸€æ¬¡åˆ¤æ–­
 					if (m_crushAnimalGrid.find(animal) != m_crushAnimalGrid.end())
 					{
 						continue;
@@ -385,7 +385,7 @@ bool AnimalGrid::canCrush()
 		}
 	}
 
-	// Èç¹ûÏû³ı¶¯ÎïºĞ×Ó²»Îª¿Õ£¬ÄÇÃ´ËµÃ÷¸ÃÕóÁĞ¿ÉÏû³ı£¬·µ»ØÕæ
+	// å¦‚æœæ¶ˆé™¤åŠ¨ç‰©ç›’å­ä¸ä¸ºç©ºï¼Œé‚£ä¹ˆè¯´æ˜è¯¥é˜µåˆ—å¯æ¶ˆé™¤ï¼Œè¿”å›çœŸ
 	if (!m_crushAnimalGrid.empty())
 	{
 		return true;
@@ -396,7 +396,7 @@ bool AnimalGrid::canCrush()
 	}
 }
 
-// ±ê¼Ç´«ÈëµÄ¶¯ÎïÏû³ı×´Ì¬
+// æ ‡è®°ä¼ å…¥çš„åŠ¨ç‰©æ¶ˆé™¤çŠ¶æ€
 void AnimalGrid::singeAnimal(Animal* animal)
 {
 	int row = animal->getX();
@@ -405,7 +405,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 	m_crushAnimalH.pushBack(animal);
 	m_crushAnimalV.pushBack(animal);
 
-	// ÅĞ¶Ï¶¯Îï×ó±ßÊÇ·ñÏàÍ¬
+	// åˆ¤æ–­åŠ¨ç‰©å·¦è¾¹æ˜¯å¦ç›¸åŒ
 	while (col>1)
 	{
 		col = col - 1;
@@ -422,7 +422,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 		}
 	}
 
-	// ÅĞ¶Ï¶¯ÎïÓÒ±ß
+	// åˆ¤æ–­åŠ¨ç‰©å³è¾¹
 	if (animal->getY() != m_col)
 	{
 		for (int i = animal->getY() + 1; i < m_col; i++)
@@ -440,7 +440,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 		}
 	}
 
-	// ÅĞ¶Ï¶¯ÎïÉÏÃæ
+	// åˆ¤æ–­åŠ¨ç‰©ä¸Šé¢
 	if (animal->getX() != m_row)
 	{
 		for (int i = animal->getX() + 1; i < m_row; i++)
@@ -459,7 +459,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 
 	}
 
-	// ÅĞ¶Ï¶¯ÎïÏÂÃæ
+	// åˆ¤æ–­åŠ¨ç‰©ä¸‹é¢
 	while (row > 1)
 	{
 		row = row - 1;
@@ -476,7 +476,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 		}
 	}
 
-	// ÅĞ¶ÏºáÏòÈİÆ÷£¬±ê¼Ç´ıÏû³ı¶¯Îï
+	// åˆ¤æ–­æ¨ªå‘å®¹å™¨ï¼Œæ ‡è®°å¾…æ¶ˆé™¤åŠ¨ç‰©
 	if (m_crushAnimalH.size() < 3)
 	{
 		m_crushAnimalH.clear();
@@ -489,7 +489,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 			animalH->setClean(true);
 		}
 	}
-	// ÅĞ¶Ï×İÏòÈİÆ÷£¬±ê¼Ç´ıÏû³ı¶¯Îï
+	// åˆ¤æ–­çºµå‘å®¹å™¨ï¼Œæ ‡è®°å¾…æ¶ˆé™¤åŠ¨ç‰©
 	if (m_crushAnimalV.size() < 3)
 	{
 		m_crushAnimalV.clear();
@@ -503,7 +503,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 		}
 	}
 
-	// ÅĞ¶Ï4Ïû
+	// åˆ¤æ–­4æ¶ˆ
 	if (m_crushAnimalH.size() == 4 || m_crushAnimalV.size() == 4)
 	{
 		log("4xiao");
@@ -539,7 +539,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 
 	}
 
-	// ÅĞ¶ÏT,LĞÍÏû
+	// åˆ¤æ–­T,Lå‹æ¶ˆ
 	if (m_crushAnimalH.size() + m_crushAnimalV.size() >= 6)
 	{
 		log("Txiao");
@@ -563,7 +563,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 		animal->setSpeicial(3);
 	}
 
-	// ÅĞ¶Ï5Ïû
+	// åˆ¤æ–­5æ¶ˆ
 	if (m_crushAnimalH.size() == 5 || m_crushAnimalV.size() == 5)
 	{
 		log("5xiao");
@@ -587,7 +587,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 		animal->setSpeicial(4);
 	}
 
-	// ±éÀúºáÏòÈİÆ÷£¬ÎªÓĞÌØÊâÏû±ê¼ÇµÄ¶¯Îï×ö´¦Àí
+	// éå†æ¨ªå‘å®¹å™¨ï¼Œä¸ºæœ‰ç‰¹æ®Šæ¶ˆæ ‡è®°çš„åŠ¨ç‰©åšå¤„ç†
 	for (auto animalH : m_crushAnimalH)
 	{
 		if (animalH->isNeedClean() && (animalH->getSpecial() > 0))
@@ -595,7 +595,7 @@ void AnimalGrid::singeAnimal(Animal* animal)
 			this->specialSinged(animalH);
 		}
 	}
-	// ±éÀú×İÏòÈİÆ÷£¬ÎªÓĞÌØÊâÏû±ê¼ÇµÄ¶¯Îï×ö´¦Àí
+	// éå†çºµå‘å®¹å™¨ï¼Œä¸ºæœ‰ç‰¹æ®Šæ¶ˆæ ‡è®°çš„åŠ¨ç‰©åšå¤„ç†
 	for (auto animalV : m_crushAnimalV)
 	{
 		if (animalV->isNeedClean() && (animalV->getSpecial() > 0))
@@ -609,10 +609,10 @@ void AnimalGrid::singeAnimal(Animal* animal)
 
 }
 
-// ÌØÊâÏû±ê¼Ç
+// ç‰¹æ®Šæ¶ˆæ ‡è®°
 void AnimalGrid::specialSinged(Animal* animal)
 {
-	// Ïû³ıÒ»ÕûÁĞ
+	// æ¶ˆé™¤ä¸€æ•´åˆ—
 	if (animal->getSpecial() == 1)
 	{
 		for (int i = 0; i < m_row; i++)
@@ -627,7 +627,7 @@ void AnimalGrid::specialSinged(Animal* animal)
 		}
 	}
 
-	// Ïû³ıÒ»ÕûĞĞ
+	// æ¶ˆé™¤ä¸€æ•´è¡Œ
 	if (animal->getSpecial() == 2)
 	{
 		for (int i = 0; i < m_col; i++)
@@ -642,7 +642,7 @@ void AnimalGrid::specialSinged(Animal* animal)
 		}
 	}
 
-	// ÁâĞÎÏû³ı
+	// è±å½¢æ¶ˆé™¤
 	if (animal->getSpecial() == 3)
 	{
 		for (int x = 0; x < m_row; x++)
@@ -665,7 +665,7 @@ void AnimalGrid::specialSinged(Animal* animal)
 		}
 	}
 
-	// Ïû³ıÍ¬Ò»ÀàĞÍ
+	// æ¶ˆé™¤åŒä¸€ç±»å‹
 	if (animal->getSpecial() == 4)
 	{
 		for (int x = 0; x < m_row; x++)
@@ -683,7 +683,7 @@ void AnimalGrid::specialSinged(Animal* animal)
 	}
 }
 
-// ±éÀúÈ«¾Ö£¬ÊÇ·ñÓĞÏû³ı±ê¼ÇµÄ¶¯Îï
+// éå†å…¨å±€ï¼Œæ˜¯å¦æœ‰æ¶ˆé™¤æ ‡è®°çš„åŠ¨ç‰©
 bool AnimalGrid::checkGridClean()
 {
 	for (int i = 0; i < m_row; i++)
@@ -701,39 +701,39 @@ bool AnimalGrid::checkGridClean()
 }
 
 
-//	¿ªÊ¼Ïû³ı
+//	å¼€å§‹æ¶ˆé™¤
 void AnimalGrid::goCrush()
 {
-	// ±éÀúÏû³ı¶¯ÎïºĞ×Ó
+	// éå†æ¶ˆé™¤åŠ¨ç‰©ç›’å­
 	for (auto animal : m_crushAnimalGrid)
 	{
-		// Éú³ÉĞÂµÄ¶¯Îï£¬³õÊ¼Î»ÖÃÔÚ²¼¾ÖÍâÒ»¸ñ
+		// ç”Ÿæˆæ–°çš„åŠ¨ç‰©ï¼Œåˆå§‹ä½ç½®åœ¨å¸ƒå±€å¤–ä¸€æ ¼
 		auto newAnimal = Animal::createByType(random(1, ANIMAL_NUM), animal->getX(), m_row);
 		newAnimal->setPosition(newAnimal->getX()*GRID_WIDTH, newAnimal->getY()*GRID_WIDTH);
 		this->addChild(newAnimal);
 
-		// ½«ĞÂ¶¯Îï·Åµ½ĞÂ¶¯ÎïºĞ×ÓÄÚ£¬µÈ´ı¼ÓÈë²¼¾Ö
+		// å°†æ–°åŠ¨ç‰©æ”¾åˆ°æ–°åŠ¨ç‰©ç›’å­å†…ï¼Œç­‰å¾…åŠ å…¥å¸ƒå±€
 		m_newAnimalGrid.pushBack(newAnimal);
 
-		// ¶¯ÎïºĞ×ÓÄÚÓ¦µ±Ë¢ĞÂµÄ¶¯ÎïÔİÊ±ÖÃÎª¿Õ
+		// åŠ¨ç‰©ç›’å­å†…åº”å½“åˆ·æ–°çš„åŠ¨ç‰©æš‚æ—¶ç½®ä¸ºç©º
 		m_AnimalGrid[animal->getX()][animal->getY()] = nullptr;
 
-		// Ô­ÓĞ¶¯Îï¶ÔÏóÏû³ı
+		// åŸæœ‰åŠ¨ç‰©å¯¹è±¡æ¶ˆé™¤
 		animal->crush();
 	}
 }
 
-// Ë¢ĞÂ²¼¾Ö
+// åˆ·æ–°å¸ƒå±€
 void AnimalGrid::refreshAnimalGrid()
 {
-	// ±éÀúÁĞ£¬Èç¹û¸ÃÁĞÓĞ¿ÕÎ»£¬ÄÇÃ´Ó¦µ±Ë¢ĞÂ
+	// éå†åˆ—ï¼Œå¦‚æœè¯¥åˆ—æœ‰ç©ºä½ï¼Œé‚£ä¹ˆåº”å½“åˆ·æ–°
 	for (int x = 0; x < m_col; x++)
 	{
-		int empty_count = 0; // Ò»ÁĞ×ÜµÄ¿Õ¸ñ×ÓÊı
+		int empty_count = 0; // ä¸€åˆ—æ€»çš„ç©ºæ ¼å­æ•°
 
 		for (int y = 0; y < m_row; y++)
 		{
-			// ¸ù¾İ×ø±êË÷Òı¶¯ÎïºĞ×ÓÄÚµÄ¶¯ÎïÖ¸Õë£¬Èç¹ûÎª¿Õ£¬ÄÇÃ´ËµÃ÷¸Ã×ø±êÎ»ÖÃÎª¿Õ
+			// æ ¹æ®åæ ‡ç´¢å¼•åŠ¨ç‰©ç›’å­å†…çš„åŠ¨ç‰©æŒ‡é’ˆï¼Œå¦‚æœä¸ºç©ºï¼Œé‚£ä¹ˆè¯´æ˜è¯¥åæ ‡ä½ç½®ä¸ºç©º
 			auto animal = m_AnimalGrid[x][y];
 			if (!animal)
 			{
@@ -743,20 +743,20 @@ void AnimalGrid::refreshAnimalGrid()
 
 		if (empty_count)
 		{
-			// ÕÒµ½ÓĞ¿ÕÎ»µÄÁĞ£¬Ë¢ĞÂ¸ÃÁĞµÄ¶¯Îï
+			// æ‰¾åˆ°æœ‰ç©ºä½çš„åˆ—ï¼Œåˆ·æ–°è¯¥åˆ—çš„åŠ¨ç‰©
 			refreshAnimalsToNewPos(x);
 		}
 	}
 }
 
-// ¶¯ÎïµôÂä
+// åŠ¨ç‰©æ‰è½
 void AnimalGrid::refreshAnimalsToNewPos(int col)
 {
-	// Ë¢ĞÂ¸ÃÁĞÉÏÃæµÄ¶¯Îï
-	int n = 0; // µ±Ç°±éÀúµ½µÄ¿ÕÎ»Êı
-	auto p_animalBox = &m_AnimalGrid; // ±£´æÒ»¸ö¶¯ÎïºĞ×ÓµÄÖ¸Õë£¬ÕâÊÇÎªÁËÈÃÆäÄÜ´«Èëlamda
+	// åˆ·æ–°è¯¥åˆ—ä¸Šé¢çš„åŠ¨ç‰©
+	int n = 0; // å½“å‰éå†åˆ°çš„ç©ºä½æ•°
+	auto p_animalBox = &m_AnimalGrid; // ä¿å­˜ä¸€ä¸ªåŠ¨ç‰©ç›’å­çš„æŒ‡é’ˆï¼Œè¿™æ˜¯ä¸ºäº†è®©å…¶èƒ½ä¼ å…¥lamda
 
-	// ÏÈÈÃÏÖÓĞµÄ¶¯ÎïÏÂÂä
+	// å…ˆè®©ç°æœ‰çš„åŠ¨ç‰©ä¸‹è½
 	for (int y = 0; y < m_row; y++)
 	{
 		auto animal = m_AnimalGrid[col][y];
@@ -771,7 +771,7 @@ void AnimalGrid::refreshAnimalsToNewPos(int col)
 			animal->setY(animal->getY() - n);
 			auto move = MoveBy::create(0.2, Vec2(0, -n*GRID_WIDTH));
 			auto call = CallFunc::create([p_animalBox, animal](){
-				// ¸üĞÂ¶¯ÎïºĞ×ÓÄÚµÄÊı¾İ
+				// æ›´æ–°åŠ¨ç‰©ç›’å­å†…çš„æ•°æ®
 				(*p_animalBox)[animal->getX()][animal->getY()] = animal;
 			});
 
@@ -779,7 +779,7 @@ void AnimalGrid::refreshAnimalsToNewPos(int col)
 		}
 	}
 
-	// ÔÙÈÃĞÂ¶¯ÎïÏÂÂä
+	// å†è®©æ–°åŠ¨ç‰©ä¸‹è½
 	int i = n;
 	int delta = 1;
 
@@ -790,11 +790,11 @@ void AnimalGrid::refreshAnimalsToNewPos(int col)
 			animal->setY(m_row - i);
 
 			auto delay = DelayTime::create(0.2);
-			// ºóÏÂÂäµÄËÙ¶ÈÉèÖÃÂıÒ»Ğ©
+			// åä¸‹è½çš„é€Ÿåº¦è®¾ç½®æ…¢ä¸€äº›
 			auto move = MoveBy::create(0.2*delta++, Vec2(0, -i--*GRID_WIDTH));
 			auto call = CallFunc::create([animal, p_animalBox, this](){
 				(*p_animalBox)[animal->getX()][animal->getY()] = animal;
-				// ´ÓĞÂ¶¯ÎïºĞ×ÓÖĞÒÆ³ı¸Ã¶¯Îï
+				// ä»æ–°åŠ¨ç‰©ç›’å­ä¸­ç§»é™¤è¯¥åŠ¨ç‰©
 				m_newAnimalGrid.eraseObject(animal);
 			});
 
@@ -803,20 +803,20 @@ void AnimalGrid::refreshAnimalsToNewPos(int col)
 	}
 }
 
-// ²¶×½½»»»×´Ì¬
+// æ•æ‰äº¤æ¢çŠ¶æ€
 void AnimalGrid::onAnimalsSwaping(float dt)
 {
-	// ²¶×½Á½¸öÕıÔÚ½»»»µÄ¶¯ÎïµÄ½»»»¶¯×÷ÊÇ·ñÒÑ¾­Í£Ö¹£¬Èç¹ûÃ»Í£Ö¹£¬·µ»Ø¼ÌĞø²¶×½
+	// æ•æ‰ä¸¤ä¸ªæ­£åœ¨äº¤æ¢çš„åŠ¨ç‰©çš„äº¤æ¢åŠ¨ä½œæ˜¯å¦å·²ç»åœæ­¢ï¼Œå¦‚æœæ²¡åœæ­¢ï¼Œè¿”å›ç»§ç»­æ•æ‰
 	if (m_animalSelected->isSwaping() || m_animalSwapped->isSwaping())
 	{
 		return;
 	}
 	else
 	{
-		// Í£Ö¹²¶×½
+		// åœæ­¢æ•æ‰
 		this->unschedule(schedule_selector(AnimalGrid::onAnimalsSwaping));
 
-		// ÅĞ¶Ïµ±Ç°×´Ì¬ÊÇ·ñ¿ÉÒÔÏû³ı
+		// åˆ¤æ–­å½“å‰çŠ¶æ€æ˜¯å¦å¯ä»¥æ¶ˆé™¤
 		if (canCrush())
 		{
 			m_animalSelected = nullptr;
@@ -827,34 +827,34 @@ void AnimalGrid::onAnimalsSwaping(float dt)
 		}
 		else
 		{
-			// ²»ÄÜÏû³ı£¬½»»»»ØÈ¥£¬¿ªÆô½»»»·µ»ØÊ±µÄ²¶×½º¯Êı
+			// ä¸èƒ½æ¶ˆé™¤ï¼Œäº¤æ¢å›å»ï¼Œå¼€å¯äº¤æ¢è¿”å›æ—¶çš„æ•æ‰å‡½æ•°
 			swapAnimals(m_animalSelected, m_animalSwapped);
 			this->schedule(schedule_selector(AnimalGrid::onAnimalsSwapingBack));
 		}
 	}
 }
 
-// ¸´Î»
+// å¤ä½
 void AnimalGrid::onAnimalsSwapingBack(float dt)
 {
-	// ²¶×½Á½¸öÕıÔÚ½»»»µÄ¶¯ÎïµÄ½»»»¶¯×÷ÊÇ·ñÒÑ¾­Í£Ö¹£¬Èç¹ûÃ»Í£Ö¹£¬·µ»Ø¼ÌĞø²¶×½
+	// æ•æ‰ä¸¤ä¸ªæ­£åœ¨äº¤æ¢çš„åŠ¨ç‰©çš„äº¤æ¢åŠ¨ä½œæ˜¯å¦å·²ç»åœæ­¢ï¼Œå¦‚æœæ²¡åœæ­¢ï¼Œè¿”å›ç»§ç»­æ•æ‰
 	if (m_animalSelected->isSwaping() || m_animalSwapped->isSwaping())
 	{
 		return;
 	}
 	else
 	{
-		this->unschedule(schedule_selector(AnimalGrid::onAnimalsSwapingBack)); // Í£Ö¹²¶×½
+		this->unschedule(schedule_selector(AnimalGrid::onAnimalsSwapingBack)); // åœæ­¢æ•æ‰
 
 		m_animalSelected = nullptr;
 
-		_eventDispatcher->resumeEventListenersForTarget(this); // ÖØĞÂ¿ªÊ¼´¥Ãş¼àÌı
+		_eventDispatcher->resumeEventListenersForTarget(this); // é‡æ–°å¼€å§‹è§¦æ‘¸ç›‘å¬
 	}
 }
 
 void AnimalGrid::onAnimalsCrushing(float dt)
 {
-	// ²¶×½¶¯ÎïÏû³ı×´Ì¬£¬Èç¹ûÓĞ¶¯Îï»¹ÔÚÏû³ı£¬ÄÇÃ´¼ÌĞø²¶×½
+	// æ•æ‰åŠ¨ç‰©æ¶ˆé™¤çŠ¶æ€ï¼Œå¦‚æœæœ‰åŠ¨ç‰©è¿˜åœ¨æ¶ˆé™¤ï¼Œé‚£ä¹ˆç»§ç»­æ•æ‰
 	for (auto animal : m_crushAnimalGrid)
 	{
 		if (animal->isCrushing())
@@ -863,20 +863,20 @@ void AnimalGrid::onAnimalsCrushing(float dt)
 		}
 	}
 
-	// Èç¹ûÈ«²¿¶¯ÎïÒÑ¾­Ïû³ıÍê±Ï£¬Í£Ö¹²¶×½º¯Êı
+	// å¦‚æœå…¨éƒ¨åŠ¨ç‰©å·²ç»æ¶ˆé™¤å®Œæ¯•ï¼Œåœæ­¢æ•æ‰å‡½æ•°
 	unschedule(schedule_selector(AnimalGrid::onAnimalsCrushing));
 
-	// Çå¿ÕÏû³ı¶¯ÎïºĞ×Ó
+	// æ¸…ç©ºæ¶ˆé™¤åŠ¨ç‰©ç›’å­
 	m_crushAnimalGrid.clear(); 
 
-	// Ë¢ĞÂ¶¯ÎïÕóÁĞ£¬²¢¿ªÆôË¢ĞÂ×´Ì¬²¶×½º¯Êı
+	// åˆ·æ–°åŠ¨ç‰©é˜µåˆ—ï¼Œå¹¶å¼€å¯åˆ·æ–°çŠ¶æ€æ•æ‰å‡½æ•°
 	refreshAnimalGrid();
 	this->schedule(schedule_selector(AnimalGrid::onAnimalsRefreshing));
 }
 
 void AnimalGrid::onAnimalsRefreshing(float dt)
 {
-	// ²¶×½¶¯ÎïË¢ĞÂ×´Ì¬£¬Èç¹ûĞÂ¶¯ÎïºĞ×Ó»¹ÓĞ¶¯Îï£¬ÄÇÃ´¼ÌĞø²¶×½
+	// æ•æ‰åŠ¨ç‰©åˆ·æ–°çŠ¶æ€ï¼Œå¦‚æœæ–°åŠ¨ç‰©ç›’å­è¿˜æœ‰åŠ¨ç‰©ï¼Œé‚£ä¹ˆç»§ç»­æ•æ‰
 	if (m_newAnimalGrid.size() != 0)
 	{
 		return;
@@ -887,14 +887,14 @@ void AnimalGrid::onAnimalsRefreshing(float dt)
 
 		if (canCrush())
 		{
-			// Èç¹ûÄÜÏû³ı£¬ÄÇÃ´¼ÌĞøÏû³ı
+			// å¦‚æœèƒ½æ¶ˆé™¤ï¼Œé‚£ä¹ˆç»§ç»­æ¶ˆé™¤
 			goCrush();
 			this->schedule(schedule_selector(AnimalGrid::onAnimalsCrushing));
 		}
 		else
 		{
 
-			// ÅĞ¶ÏÊÇ·ñÎªËÀÍ¼£¬Èç¹ûÊÇ£¬ÌáÊ¾¼´½«¸üĞÂµØÍ¼
+			// åˆ¤æ–­æ˜¯å¦ä¸ºæ­»å›¾ï¼Œå¦‚æœæ˜¯ï¼Œæç¤ºå³å°†æ›´æ–°åœ°å›¾
 			if (isDeadMap())
 			{
 				auto winSize = Director::getInstance()->getWinSize();
@@ -904,7 +904,7 @@ void AnimalGrid::onAnimalsRefreshing(float dt)
 				label->setOpacity(0);
 				this->getParent()->addChild(label,3);
 
-				// ÌáÊ¾ÎÄ×Öµ­Èëµ­³öºó£¬¸üĞÂµØÍ¼£¬ÔÙ¿ªÆô´¥Ãş¼àÌı
+				// æç¤ºæ–‡å­—æ·¡å…¥æ·¡å‡ºåï¼Œæ›´æ–°åœ°å›¾ï¼Œå†å¼€å¯è§¦æ‘¸ç›‘å¬
 				auto fadein = FadeIn::create(0.5);
 				auto fadeout = FadeOut::create(0.5);
 
@@ -923,7 +923,7 @@ void AnimalGrid::onAnimalsRefreshing(float dt)
 			}
 			else
 			{
-				// Èç¹û²»ÊÇËÀÍ¼£¬ÄÇÃ´¾ÍÖ±½Ó¿ªÆô´¥Ãş¼àÌı£¬µÈ´ıÏÂÒ»ÂÖµÄ½»»¥²Ù×÷
+				// å¦‚æœä¸æ˜¯æ­»å›¾ï¼Œé‚£ä¹ˆå°±ç›´æ¥å¼€å¯è§¦æ‘¸ç›‘å¬ï¼Œç­‰å¾…ä¸‹ä¸€è½®çš„äº¤äº’æ“ä½œ
 				_eventDispatcher->resumeEventListenersForTarget(this);
 			}
 		}

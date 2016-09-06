@@ -1,4 +1,4 @@
-#ifndef __ANIMAL_GRID_H__
+ï»¿#ifndef __ANIMAL_GRID_H__
 #define __ANIMAL_GRID_H__
 
 #include "cocos2d.h"
@@ -13,47 +13,47 @@ using namespace std;
 class AnimalGrid : public cocos2d::Node
 {
 private:
-	int m_row;	// ĞĞÊı
-	int m_col;	// ÁĞÊı
+	int m_row;	// è¡Œæ•°
+	int m_col;	// åˆ—æ•°
 
-	Animal* m_animalSelected; // µ±Ç°Ñ¡ÔñµÄ¶¯Îï
-	Animal* m_animalSwapped; // Óû½»»»µÄ¶¯Îï
+	Animal* m_animalSelected; // å½“å‰é€‰æ‹©çš„åŠ¨ç‰©
+	Animal* m_animalSwapped; // æ¬²äº¤æ¢çš„åŠ¨ç‰©
 	
-	vector<vector<Animal*>> m_AnimalGrid; // ´æ·Å¶¯Îï¶ÔÏóµÄÈİÆ÷
-	Vector<Animal*> m_crushAnimalGrid; // ×¼±¸Ïû³ıµÄ¶¯ÎïÈİÆ÷
-	Vector<Animal*> m_newAnimalGrid; // ×¼±¸¼ÓÈë²¼¾ÖµÄ¶¯ÎïÈİÆ÷
+	vector<vector<Animal*>> m_AnimalGrid; // å­˜æ”¾åŠ¨ç‰©å¯¹è±¡çš„å®¹å™¨
+	Vector<Animal*> m_crushAnimalGrid; // å‡†å¤‡æ¶ˆé™¤çš„åŠ¨ç‰©å®¹å™¨
+	Vector<Animal*> m_newAnimalGrid; // å‡†å¤‡åŠ å…¥å¸ƒå±€çš„åŠ¨ç‰©å®¹å™¨
 
 	Vector<Animal*> m_crushAnimalH;
 	Vector<Animal*> m_crushAnimalV;
 
 
-	// ¹ØÓÚ´´½¨¶¯ÎïµÄ·½·¨
-	Animal* createAnimal(int x, int y); // ¸ù¾İ×ø±ê´´½¨Ò»¸ö¶¯Îï
-	bool isAnimalLegal(Animal* animal, int x, int y); // ÅĞ¶Ï´´½¨µÄ¶¯ÎïÊÇ·ñºÏ·¨
+	// å…³äºåˆ›å»ºåŠ¨ç‰©çš„æ–¹æ³•
+	Animal* createAnimal(int x, int y); // æ ¹æ®åæ ‡åˆ›å»ºä¸€ä¸ªåŠ¨ç‰©
+	bool isAnimalLegal(Animal* animal, int x, int y); // åˆ¤æ–­åˆ›å»ºçš„åŠ¨ç‰©æ˜¯å¦åˆæ³•
 
-	// ¹ØÓÚ²Ù×÷¶¯ÎïµÄ·½·¨
-	void swapAnimals(Animal *animalA, Animal *animalB); // ½»»»Á½¸ö¶¯Îï
-	void swapAnimalToNewPos(Animal* animal); // ÒÆ¶¯µ½ĞÂÎ»ÖÃ
+	// å…³äºæ“ä½œåŠ¨ç‰©çš„æ–¹æ³•
+	void swapAnimals(Animal *animalA, Animal *animalB); // äº¤æ¢ä¸¤ä¸ªåŠ¨ç‰©
+	void swapAnimalToNewPos(Animal* animal); // ç§»åŠ¨åˆ°æ–°ä½ç½®
 
-	// ÊÂ¼şÏìÓ¦²¿·Ö
+	// äº‹ä»¶å“åº”éƒ¨åˆ†
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
 	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event);
 
-	// ÓÎÏ·Âß¼­²¿·Ö
-	bool canCrush(); // ÅĞ¶Ïµ±Ç°×´Ì¬µÄ¶¯ÎïÕóÁĞÊÇ·ñÄÜÏû³ı
-	void goCrush(); // ¿ªÊ¼Ïû³ı
+	// æ¸¸æˆé€»è¾‘éƒ¨åˆ†
+	bool canCrush(); // åˆ¤æ–­å½“å‰çŠ¶æ€çš„åŠ¨ç‰©é˜µåˆ—æ˜¯å¦èƒ½æ¶ˆé™¤
+	void goCrush(); // å¼€å§‹æ¶ˆé™¤
 
-	void refreshAnimalGrid(); // Ë¢ĞÂÏû³ıºóµÄ¶¯ÎïÕóÁĞ
-	void refreshAnimalsToNewPos(int col); // Ë¢ĞÂÒ»ÁĞ¶¯Îï
+	void refreshAnimalGrid(); // åˆ·æ–°æ¶ˆé™¤åçš„åŠ¨ç‰©é˜µåˆ—
+	void refreshAnimalsToNewPos(int col); // åˆ·æ–°ä¸€åˆ—åŠ¨ç‰©
 
-	// ²¶×½º¯Êı£¬²¶×½Ïû³ı²½ÖèÊÇ·ñÍê³É
+	// æ•æ‰å‡½æ•°ï¼Œæ•æ‰æ¶ˆé™¤æ­¥éª¤æ˜¯å¦å®Œæˆ
 	void onAnimalsSwaping(float dt);
 	void onAnimalsSwapingBack(float dt);
 	void onAnimalsCrushing(float dt);
 	void onAnimalsRefreshing(float dt);
 
 
-	void singeAnimal(Animal* animal); // ÅĞ¶Ïµ¥¸ö¶¯Îï
+	void singeAnimal(Animal* animal); // åˆ¤æ–­å•ä¸ªåŠ¨ç‰©
 	void specialSinged(Animal* animal);
 	bool checkGridClean();
 
@@ -61,8 +61,8 @@ public:
 	static AnimalGrid* create(int row, int col);
 	bool init(int row, int col);
 
-	void updateMap(); // ¸üĞÂ¶¯ÎïÕóÁĞ
-	bool isDeadMap(); // ÅĞ¶Ïµ±Ç°²¼¾ÖÊÇ·ñËÀÍ¼
+	void updateMap(); // æ›´æ–°åŠ¨ç‰©é˜µåˆ—
+	bool isDeadMap(); // åˆ¤æ–­å½“å‰å¸ƒå±€æ˜¯å¦æ­»å›¾
 
 	int getRow() { return m_row; }
 	int getCol() { return m_col; }

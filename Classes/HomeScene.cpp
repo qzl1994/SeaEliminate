@@ -1,4 +1,4 @@
-#include "HomeScene.h"
+ï»¿#include "HomeScene.h"
 
 USING_NS_CC;
 
@@ -22,16 +22,20 @@ bool HomeLayer::init()
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 
-	// ±³¾°Í¼Æ¬
+	// èƒŒæ™¯å›¾ç‰‡
 	auto bg = Sprite::createWithTexture(TextureCache::getInstance()->getTextureForKey("texture/home.png"));
 	bg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
 	this->addChild(bg, 0);
+	
 
+	// æç¤ºæ ‡ç­¾
 	auto label = Label::createWithTTF("Tap the Screen to Play", "fonts/Marker Felt.ttf", 36);
-	label->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-	this->addChild(label);
+	label->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 6));
+	this->addChild(label, 1);
+	
+	label->runAction(RepeatForever::create(Blink::create(1, 1)));
 
-	// ×¢²á´¥ÃþÊÂ¼þ¼àÌýÆ÷
+	// æ³¨å†Œè§¦æ‘¸äº‹ä»¶ç›‘å¬å™¨
 	auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 
@@ -39,12 +43,12 @@ bool HomeLayer::init()
 
 		auto scene = TransitionFade::create(1.0f, GameLayer::createScene());
 
-		Director::getInstance()->replaceScene(scene);
+		Director::getInstance()->pushScene(scene);
 
 		return false;
 	};
 
-	// Ìí¼Ó´¥ÃþÊÂ¼þ¼àÌýÆ÷
+	// æ·»åŠ è§¦æ‘¸äº‹ä»¶ç›‘å¬å™¨
 	EventDispatcher* eventDispatcher = Director::getInstance()->getEventDispatcher();
 	eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
@@ -63,4 +67,6 @@ void HomeLayer::onExit()
 	Layer::onExit();
 
 	SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+
+	Director::getInstance()->getEventDispatcher()->removeEventListenersForTarget(this);
 }
